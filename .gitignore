@@ -3,13 +3,9 @@
 # dependencies
 /node_modules
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
-/dist
+/out
 
 # debug
 npm-debug.log*
@@ -19,13 +15,6 @@ yarn-error.log*
 
 # env files
 .env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
 
 # misc
 .vscode-test/

@@ -7,14 +7,38 @@ interface MessageInputProps {
   onSendMessage: (message: string) => void
   workspaceFiles: string[]
   disabled: boolean
+  selectedFiles: string[]
+  onFileSelect: (files: string[]) => void
+  onShowFilePicker: () => void
 }
 
-export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, workspaceFiles, disabled }) => {
+export const MessageInput: React.FC<MessageInputProps> = ({
+  onSendMessage,
+  workspaceFiles,
+  disabled,
+  selectedFiles,
+  onFileSelect,
+  onShowFilePicker,
+}) => {
   const [message, setMessage] = useState("")
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [cursorPosition, setCursorPosition] = useState(0)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Sync selected files with input text
+  useEffect(() => {
+    const currentFiles = extractFilesFromMessage(message)
+    if (JSON.stringify(currentFiles.sort()) !== JSON.stringify(selectedFiles.sort())) {
+      onFileSelect(currentFiles)
+    }
+  }, [message, selectedFiles, onFileSelect])
+
+  // Extract @file references from message
+  const extractFilesFromMessage = (text: string): string[] => {
+    const fileMatches = text.match(/@([^\s]+)/g)
+    return fileMatches ? fileMatches.map((match) => match.substring(1)) : []
+  }
 
   // Auto-resize textarea
   const adjustTextareaHeight = useCallback(() => {
@@ -123,6 +147,26 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
     [cursorPosition],
   )
 
+  const handleFilePickerSelect = useCallback(
+    (filePath: string) => {
+      const relativePath = filePath.startsWith("./") ? filePath.substring(2) : filePath
+      const currentMessage = message
+      const newMessage = currentMessage + (currentMessage ? " " : "") + `@${relativePath} `
+      setMessage(newMessage)
+
+      // Focus back to textarea
+      setTimeout(() => {
+        textareaRef.current?.focus()
+      }, 0)
+    },
+    [message],
+  )
+
+  // Expose the handler for parent component
+  useEffect(() => {
+    ;(window as any).handleFilePickerSelect = handleFilePickerSelect
+  }, [handleFilePickerSelect])
+
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault()
@@ -156,6 +200,21 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
           ))}
         </div>
       )}
+
+      <div className="file-selector-section">
+        <button type="button" className="file-selector-button" onClick={onShowFilePicker} disabled={disabled}>
+          📁 Browse Files
+        </button>
+        {selectedFiles.length > 0 && (
+          <div className="selected-files-preview">
+            {selectedFiles.map((file) => (
+              <span key={file} className="selected-file-tag">
+                📄 {file}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit} className="message-input-form">
         <div className="input-wrapper">

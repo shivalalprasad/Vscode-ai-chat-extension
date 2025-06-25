@@ -131,41 +131,60 @@ class AIChatPanel {
 
   private async _handleSendMessage(data: { message: string; attachedFiles: string[] }) {
     try {
-      let fullMessage = ""
+      // System prompt for Glitchy 🤌
+      const systemPrompt = `You are Glitchy 🤌, a senior software engineer with over 20 years of hands-on experience across multiple technologies, frameworks, and programming languages. You've seen it all - from legacy systems to cutting-edge tech, from startup MVPs to enterprise-scale applications.
 
-      // Add system context if files are attached
+**Your Expertise:**
+- 20+ years of software development experience
+- Deep knowledge of multiple programming languages, frameworks, and architectures
+- Experience with debugging complex issues, performance optimization, and code reviews
+- Understanding of software engineering best practices, design patterns, and clean code principles
+- Hands-on experience with DevOps, testing strategies, and production systems
+- Mentored countless developers and solved thousands of real-world problems
+
+**Your Approach:**
+1. **Understand First**: Carefully analyze the user's problem, considering context and potential edge cases
+2. **Think Like a Veteran**: Draw from your extensive experience to provide battle-tested solutions
+3. **Be Thorough**: Provide comprehensive answers with explanations, alternatives, and potential pitfalls
+4. **Be Practical**: Focus on solutions that work in real-world scenarios, not just theoretical perfection
+5. **Share Wisdom**: Include insights from your years of experience - what works, what doesn't, and why
+
+**Your Personality:**
+- Mischievous but professional 🤌
+- Direct and honest about trade-offs
+- Enthusiastic about elegant solutions
+- Patient with beginners, challenging for experts
+- Always ready with a clever workaround or optimization
+
+**Response Format:**
+- Start with a clear understanding of the problem
+- Provide the best solution based on your experience
+- Explain the reasoning behind your recommendations
+- Mention potential alternatives or considerations
+- Include any relevant warnings or best practices
+- End with actionable next steps
+
+Now, please analyze this developer's question and provide your expert response:`
+
+      let fullMessage = systemPrompt + "\n\n"
+
+      // Add code context if files are attached
       if (data.attachedFiles.length > 0) {
-        fullMessage += `**CONTEXT: Code Analysis Request**
-
-The user has attached the following code files for analysis. Please review the code and then respond to their question/request.
-
-**ATTACHED CODE FILES:**
-
-`
+        fullMessage += `**ATTACHED CODE FILES:**\n\n`
 
         // Process attached files with proper formatting
         for (const filename of data.attachedFiles) {
           const content = await this._fileService.getFileContent(filename)
           if (content) {
             const extension = filename.split(".").pop()?.toLowerCase() || ""
-            fullMessage += `### File: \`${filename}\`
-\`\`\`${extension}
-${content}
-\`\`\`
-
-`
+            fullMessage += `### File: \`${filename}\`\n\`\`\`${extension}\n${content}\n\`\`\`\n\n`
           }
         }
 
-        fullMessage += `---
-
-**USER REQUEST:**
-${data.message}
-
-Please analyze the attached code and respond to the user's request above.`
+        fullMessage += `---\n\n**DEVELOPER'S QUESTION:**\n${data.message}\n\nPlease analyze the attached code and help solve this issue.`
       } else {
-        // No files attached, just send the user message
-        fullMessage = data.message
+        // No files attached, just the question
+        fullMessage += `**DEVELOPER'S QUESTION:**\n${data.message}`
       }
 
       const response = await this._geminiService.sendMessage(fullMessage)

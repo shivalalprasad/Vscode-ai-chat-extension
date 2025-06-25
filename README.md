@@ -22,20 +22,20 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
 ### Development Setup
 
 1. Clone this repository:
-   \\\bash
+   ``` bash
    git clone <repository-url>
    cd ai-chat-assistant
-   \\\
+   ```
 
 2. Install dependencies:
-   \\\ bash
+   ``` bash
    npm install
-   \\\
+   ```
 
 3. Build the extension:
-   \\\ bash
+   ``` bash
    npm run compile
-   \\\
+   ```
 
 4. Open the project in VS Code and press `F5` to run the extension in a new Extension Development Host window.
 
@@ -91,7 +91,7 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
 
 ### Building
 
-\\\ bash
+``` bash
 # Compile TypeScript
 npm run compile
 
@@ -100,7 +100,7 @@ npm run webpack
 
 # Build for production
 npm run vscode:prepublish
-\\\
+```
 
 ### Debugging
 
@@ -110,7 +110,7 @@ npm run vscode:prepublish
 
 ### Project Structure
 
-\\\
+```
 src/
 ├── extension.ts              # Main extension entry point
 ├── utils/
@@ -126,7 +126,7 @@ src/
     ├── types.ts             # TypeScript type definitions
     ├── index.tsx            # React entry point
     └── styles.css           # CSS styles
-\\\
+```
 
 ## Contributing
 

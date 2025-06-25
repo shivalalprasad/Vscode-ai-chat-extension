@@ -9,7 +9,8 @@ export class OpenAIService {
     // Try to get from environment variables first, then from VS Code settings
     this.apiKey =
       process.env.OPENAI_API_KEY || vscode.workspace.getConfiguration("aiChatAssistant").get("openaiApiKey", "")
-    this.model = process.env.OPENAI_MODEL || vscode.workspace.getConfiguration("aiChatAssistant").get("model", "gpt-4")
+    this.model =
+      process.env.OPENAI_MODEL || vscode.workspace.getConfiguration("aiChatAssistant").get("model", "gpt-3.5-turbo")
 
     if (!this.apiKey) {
       console.warn("OPENAI_API_KEY environment variable not set and no API key found in settings")

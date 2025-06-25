@@ -81,6 +81,15 @@ class AIChatPanel {
     this._update()
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables)
 
+    // Listen for active editor changes
+    vscode.window.onDidChangeActiveTextEditor(
+      () => {
+        this._sendCurrentFileInfo()
+      },
+      null,
+      this._disposables,
+    )
+
     this._panel.webview.onDidReceiveMessage(
       async (message) => {
         try {
@@ -91,11 +100,23 @@ class AIChatPanel {
             case "getCurrentFile":
               await this._handleGetCurrentFile()
               break
+            case "getCurrentFileInfo":
+              await this._sendCurrentFileInfo()
+              break
             case "getFileContent":
               await this._handleGetFileContent(message.data.filename)
               break
             case "getWorkspaceFiles":
               await this._handleGetWorkspaceFiles()
+              break
+            case "getFilteredFiles":
+              await this._handleGetFilteredFiles()
+              break
+            case "quickAction":
+              await this._handleQuickAction(message.data.action)
+              break
+            case "selectFile":
+              await this._handleSelectFile(message.data.filePath, message.data.action)
               break
           }
         } catch (error) {
@@ -151,10 +172,11 @@ class AIChatPanel {
         const selection = activeEditor.selection
         const filename = path.basename(document.fileName)
         const content = !selection.isEmpty ? document.getText(selection) : document.getText()
+        const language = document.languageId
 
         this._panel.webview.postMessage({
           type: "currentFileContent",
-          data: { filename, content, isSelection: !selection.isEmpty },
+          data: { filename, content, language, isSelection: !selection.isEmpty },
         })
       } else {
         this._panel.webview.postMessage({
@@ -168,6 +190,18 @@ class AIChatPanel {
         type: "error",
         data: { message: `Failed to get current file: ${error}` },
       })
+    }
+  }
+
+  private async _sendCurrentFileInfo() {
+    try {
+      const fileInfo = await this._fileService.getCurrentFileInfo()
+      this._panel.webview.postMessage({
+        type: "currentFileInfo",
+        data: { fileInfo },
+      })
+    } catch (error) {
+      console.error("Error getting current file info:", error)
     }
   }
 
@@ -199,6 +233,102 @@ class AIChatPanel {
       this._panel.webview.postMessage({
         type: "error",
         data: { message: `Failed to get workspace files: ${error}` },
+      })
+    }
+  }
+
+  private async _handleGetFilteredFiles() {
+    try {
+      const codeExtensions = this._fileService.getCodeFileExtensions()
+      const files = await this._fileService.getFilteredWorkspaceFiles(codeExtensions)
+      this._panel.webview.postMessage({
+        type: "filteredFiles",
+        data: { files },
+      })
+    } catch (error) {
+      console.error("Error getting filtered files:", error)
+      this._panel.webview.postMessage({
+        type: "error",
+        data: { message: `Failed to get filtered files: ${error}` },
+      })
+    }
+  }
+
+  private async _handleQuickAction(action: string) {
+    try {
+      const activeEditor = vscode.window.activeTextEditor
+
+      if (activeEditor) {
+        // If there's an active file, use it directly
+        await this._handleGetCurrentFile()
+      } else {
+        // No active file, show file picker
+        this._panel.webview.postMessage({
+          type: "showFilePicker",
+          data: { action },
+        })
+      }
+    } catch (error) {
+      console.error("Error handling quick action:", error)
+      this._panel.webview.postMessage({
+        type: "error",
+        data: { message: `Failed to execute action: ${error}` },
+      })
+    }
+  }
+
+  private async _handleSelectFile(filePath: string, action: string) {
+    try {
+      const content = await this._fileService.getFileContent(filePath)
+      if (content) {
+        const extension = path.extname(filePath).toLowerCase()
+        const languageMap: Record<string, string> = {
+          ".ts": "typescript",
+          ".tsx": "typescript",
+          ".js": "javascript",
+          ".jsx": "javascript",
+          ".py": "python",
+          ".java": "java",
+          ".cpp": "cpp",
+          ".c": "c",
+          ".cs": "csharp",
+          ".php": "php",
+          ".rb": "ruby",
+          ".go": "go",
+          ".rs": "rust",
+          ".swift": "swift",
+          ".kt": "kotlin",
+          ".scala": "scala",
+          ".html": "html",
+          ".css": "css",
+          ".scss": "scss",
+          ".json": "json",
+          ".yaml": "yaml",
+          ".yml": "yaml",
+          ".md": "markdown",
+          ".sql": "sql",
+          ".sh": "bash",
+          ".dockerfile": "dockerfile",
+        }
+
+        const language = languageMap[extension] || ""
+        const filename = path.basename(filePath)
+
+        this._panel.webview.postMessage({
+          type: "selectedFileContent",
+          data: { filename, content, language },
+        })
+      } else {
+        this._panel.webview.postMessage({
+          type: "error",
+          data: { message: `Failed to read file: ${filePath}` },
+        })
+      }
+    } catch (error) {
+      console.error("Error selecting file:", error)
+      this._panel.webview.postMessage({
+        type: "error",
+        data: { message: `Failed to select file: ${error}` },
       })
     }
   }

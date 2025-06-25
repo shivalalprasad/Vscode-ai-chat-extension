@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react"
 import { ChatPanel } from "./components/ChatPanel"
 import { MessageInput } from "./components/MessageInput"
 import { FileAttachment } from "./components/FileAttachment"
+import { FilePickerModal } from "./components/FilePickerModal"
 import type { Message, FileAttachmentData } from "./types"
 
 declare global {
@@ -15,15 +16,31 @@ declare global {
 
 const vscode = window.acquireVsCodeApi()
 
+interface FileInfo {
+  name: string
+  path: string
+  relativePath: string
+  type: "file" | "directory"
+  extension?: string
+  size?: number
+  lastModified?: Date
+}
+
 export const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [attachedFiles, setAttachedFiles] = useState<FileAttachmentData[]>([])
   const [workspaceFiles, setWorkspaceFiles] = useState<string[]>([])
+  const [filteredFiles, setFilteredFiles] = useState<FileInfo[]>([])
   const [isConnected, setIsConnected] = useState(true)
+  const [showFilePicker, setShowFilePicker] = useState(false)
+  const [filePickerAction, setFilePickerAction] = useState<string>("")
+  const [currentFileInfo, setCurrentFileInfo] = useState<FileInfo | null>(null)
 
   useEffect(() => {
     vscode.postMessage({ type: "getWorkspaceFiles" })
+    vscode.postMessage({ type: "getCurrentFileInfo" })
+    vscode.postMessage({ type: "getFilteredFiles" })
 
     const handleMessage = (event: MessageEvent) => {
       const message = event.data
@@ -58,8 +75,34 @@ export const App: React.FC = () => {
           break
 
         case "currentFileContent":
-          const fileContent = `📄 Current ${message.data.isSelection ? "selection" : "file"}: **${message.data.filename}**\n\n\`\`\`\n${message.data.content}\n\`\`\``
+          const fileContent = `📄 Current ${message.data.isSelection ? "selection" : "file"}: **${message.data.filename}**\n\n\`\`\`${message.data.language || ""}\n${message.data.content}\n\`\`\``
           handleSendMessage(fileContent)
+          break
+
+        case "selectedFileContent":
+          const selectedContent = `📄 Selected file: **${message.data.filename}**\n\n\`\`\`${message.data.language || ""}\n${message.data.content}\n\`\`\``
+
+          // Add the action-specific prompt
+          let actionPrompt = ""
+          switch (filePickerAction) {
+            case "explain":
+              actionPrompt = "Please explain this code and suggest improvements."
+              break
+            case "findBugs":
+              actionPrompt = "Please review this code for potential bugs, security issues, and performance problems."
+              break
+            case "generateTests":
+              actionPrompt = "Please generate comprehensive unit tests for this code."
+              break
+            case "optimize":
+              actionPrompt = "Please optimize this code for better performance and readability."
+              break
+            case "addComments":
+              actionPrompt = "Please add comprehensive comments and documentation to this code."
+              break
+          }
+
+          handleSendMessage(`${selectedContent}\n\n${actionPrompt}`)
           break
 
         case "fileContent":
@@ -76,6 +119,19 @@ export const App: React.FC = () => {
 
         case "workspaceFiles":
           setWorkspaceFiles(message.data.files)
+          break
+
+        case "filteredFiles":
+          setFilteredFiles(message.data.files)
+          break
+
+        case "currentFileInfo":
+          setCurrentFileInfo(message.data.fileInfo)
+          break
+
+        case "showFilePicker":
+          setFilePickerAction(message.data.action)
+          setShowFilePicker(true)
           break
       }
     }
@@ -133,40 +189,23 @@ export const App: React.FC = () => {
     setMessages([])
   }, [])
 
-  const handleExplainCode = useCallback(() => {
-    vscode.postMessage({ type: "getCurrentFile" })
-    setTimeout(() => {
-      handleSendMessage("Please explain this code and suggest improvements.")
-    }, 100)
-  }, [handleSendMessage])
+  const handleQuickAction = useCallback((action: string) => {
+    vscode.postMessage({ type: "quickAction", data: { action } })
+  }, [])
 
-  const handleFindBugs = useCallback(() => {
-    vscode.postMessage({ type: "getCurrentFile" })
-    setTimeout(() => {
-      handleSendMessage("Please review this code for potential bugs, security issues, and performance problems.")
-    }, 100)
-  }, [handleSendMessage])
-
-  const handleGenerateTests = useCallback(() => {
-    vscode.postMessage({ type: "getCurrentFile" })
-    setTimeout(() => {
-      handleSendMessage("Please generate comprehensive unit tests for this code.")
-    }, 100)
-  }, [handleSendMessage])
-
-  const handleOptimizeCode = useCallback(() => {
-    vscode.postMessage({ type: "getCurrentFile" })
-    setTimeout(() => {
-      handleSendMessage("Please optimize this code for better performance and readability.")
-    }, 100)
-  }, [handleSendMessage])
-
-  const handleAddComments = useCallback(() => {
-    vscode.postMessage({ type: "getCurrentFile" })
-    setTimeout(() => {
-      handleSendMessage("Please add comprehensive comments and documentation to this code.")
-    }, 100)
-  }, [handleSendMessage])
+  const handleFileSelect = useCallback(
+    (file: FileInfo) => {
+      setShowFilePicker(false)
+      vscode.postMessage({
+        type: "selectFile",
+        data: {
+          filePath: file.relativePath,
+          action: filePickerAction,
+        },
+      })
+    },
+    [filePickerAction],
+  )
 
   return (
     <div className="app">
@@ -176,6 +215,7 @@ export const App: React.FC = () => {
             🤖 AI Chat Assistant
             <div className={`status-indicator ${isConnected ? "connected" : "disconnected"}`}></div>
           </h1>
+          {currentFileInfo && <span className="current-file-indicator">📄 {currentFileInfo.name}</span>}
         </div>
         <div className="header-actions">
           <button className="action-btn" onClick={handleUseCurrentFile}>
@@ -193,19 +233,19 @@ export const App: React.FC = () => {
         {/* Quick Actions */}
         <div className="quick-actions">
           <span className="quick-actions-label">Quick Actions:</span>
-          <button className="quick-action-btn" onClick={handleExplainCode}>
+          <button className="quick-action-btn" onClick={() => handleQuickAction("explain")}>
             💡 Explain Code
           </button>
-          <button className="quick-action-btn" onClick={handleFindBugs}>
+          <button className="quick-action-btn" onClick={() => handleQuickAction("findBugs")}>
             🐛 Find Bugs
           </button>
-          <button className="quick-action-btn" onClick={handleGenerateTests}>
+          <button className="quick-action-btn" onClick={() => handleQuickAction("generateTests")}>
             🧪 Generate Tests
           </button>
-          <button className="quick-action-btn" onClick={handleOptimizeCode}>
+          <button className="quick-action-btn" onClick={() => handleQuickAction("optimize")}>
             ⚡ Optimize
           </button>
-          <button className="quick-action-btn" onClick={handleAddComments}>
+          <button className="quick-action-btn" onClick={() => handleQuickAction("addComments")}>
             📝 Add Comments
           </button>
         </div>
@@ -219,6 +259,15 @@ export const App: React.FC = () => {
 
         <MessageInput onSendMessage={handleSendMessage} workspaceFiles={workspaceFiles} disabled={isLoading} />
       </div>
+
+      <FilePickerModal
+        isOpen={showFilePicker}
+        onClose={() => setShowFilePicker(false)}
+        onSelectFile={handleFileSelect}
+        files={filteredFiles}
+        title="Select a file to analyze"
+        description="Choose a code file from your workspace to perform the selected action."
+      />
     </div>
   )
 }

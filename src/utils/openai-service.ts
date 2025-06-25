@@ -1,4 +1,3 @@
-import * as vscode from "vscode"
 import axios from "axios"
 
 export class OpenAIService {
@@ -6,24 +5,18 @@ export class OpenAIService {
   private model: string
 
   constructor() {
-    const config = vscode.workspace.getConfiguration("aiChatAssistant")
-    this.apiKey = config.get("openaiApiKey") || ""
-    this.model = config.get("model") || "gpt-4"
+    // Use environment variable instead of VS Code settings
+    this.apiKey = process.env.OPENAI_API_KEY || ""
+    this.model = process.env.OPENAI_MODEL || "gpt-4"
 
     if (!this.apiKey) {
-      vscode.window
-        .showWarningMessage("OpenAI API key not configured. Please set it in VS Code settings.", "Open Settings")
-        .then((selection) => {
-          if (selection === "Open Settings") {
-            vscode.commands.executeCommand("workbench.action.openSettings", "aiChatAssistant.openaiApiKey")
-          }
-        })
+      console.warn("OPENAI_API_KEY environment variable not set")
     }
   }
 
   async sendMessage(message: string): Promise<string> {
     if (!this.apiKey) {
-      throw new Error("OpenAI API key not configured")
+      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.")
     }
 
     try {

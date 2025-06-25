@@ -1,7 +1,11 @@
 import * as vscode from "vscode"
 import * as path from "path"
+import { config } from "dotenv"
 import { OpenAIService } from "./utils/openai-service"
 import { FileService } from "./utils/file-service"
+
+// Load environment variables from .env file
+config()
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("AI Chat Assistant extension is now active!")

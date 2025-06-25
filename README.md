@@ -18,33 +18,53 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
 - Node.js (v16 or higher)
 - npm or yarn
 - Visual Studio Code (v1.74.0 or higher)
+- OpenAI API key
 
 ### Development Setup
 
 1. Clone this repository:
-   ```bash
+   \`\`\`bash
    git clone <repository-url>
    cd ai-chat-assistant
-   ```
+   \`\`\`
 
 2. Install dependencies:
-   ```bash
+   \`\`\`bash
    npm install
-   ```
+   \`\`\`
 
-3. Build the extension:
-   ```bash
+3. Configure your OpenAI API key:
+   \`\`\`bash
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit .env and add your OpenAI API key
+   # OPENAI_API_KEY=your_actual_api_key_here
+   # OPENAI_MODEL=gpt-4
+   \`\`\`
+
+4. Build the extension:
+   \`\`\`bash
    npm run compile
-   ```
+   \`\`\`
 
-4. Open the project in VS Code and press `F5` to run the extension in a new Extension Development Host window.
+5. Open the project in VS Code and press `F5` to run the extension in a new Extension Development Host window.
 
 ### Configuration
 
-1. Open VS Code Settings (`Ctrl/Cmd + ,`)
-2. Search for "AI Chat Assistant"
-3. Set your OpenAI API key in the `aiChatAssistant.openaiApiKey` setting
-4. Optionally, choose your preferred model (GPT-4 or GPT-3.5-turbo)
+The extension uses environment variables for configuration:
+
+- `OPENAI_API_KEY`: Your OpenAI API key (required)
+- `OPENAI_MODEL`: OpenAI model to use (default: "gpt-4", can also use "gpt-3.5-turbo")
+
+Create a `.env` file in the root directory:
+
+\`\`\`env
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4
+\`\`\`
+
+**Important**: Never commit your `.env` file to version control. The `.env` file is already included in `.gitignore`.
 
 ## Usage
 
@@ -91,7 +111,7 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
 
 ### Building
 
-```bash
+\`\`\`bash
 # Compile TypeScript
 npm run compile
 
@@ -100,7 +120,7 @@ npm run webpack
 
 # Build for production
 npm run vscode:prepublish
-```
+\`\`\`
 
 ### Debugging
 
@@ -110,7 +130,7 @@ npm run vscode:prepublish
 
 ### Project Structure
 
-```
+\`\`\`
 src/
 ├── extension.ts              # Main extension entry point
 ├── utils/
@@ -126,7 +146,7 @@ src/
     ├── types.ts             # TypeScript type definitions
     ├── index.tsx            # React entry point
     └── styles.css           # CSS styles
-```
+\`\`\`
 
 ## Contributing
 
@@ -155,6 +175,6 @@ If you encounter any issues or have questions:
 - Initial release
 - React-based chat interface
 - File attachment support with @filename syntax
-- OpenAI integration
+- OpenAI integration with environment variable configuration
 - Code application feature
 - Workspace file integration

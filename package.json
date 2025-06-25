@@ -1,5 +1,5 @@
 {
-  "name": "ai-chat-assistant",
+  "name": "Glitchy 🤌",
   "displayName": "Glitchy 🤌 - AI Chat Assistant for Developers",
   "version": "1.0.0",
   "private": true,
@@ -21,7 +21,7 @@
     "commands": [
       {
         "command": "aiChatAssistant.start",
-        "title": "Start AI Chat Assistant"
+        "title": "Start Glitchy 🤌"
       }
     ],
     "configuration": {

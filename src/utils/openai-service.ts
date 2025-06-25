@@ -32,7 +32,8 @@ export class OpenAIService {
           messages: [
             {
               role: "system",
-              content: "You are a helpful AI assistant for developers.",
+              content:
+                "You are Glitchy 🤌, a mischievous but helpful AI assistant for developers. You're playful, clever, and always ready with creative solutions.",
             },
             {
               role: "user",

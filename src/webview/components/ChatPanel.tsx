@@ -57,7 +57,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading }) => 
               <span></span>
               <span></span>
             </div>
-            <span>🤖 AI is thinking...</span>
+            <span>Glitchy 🤌 is thinking...</span>
           </div>
         )}
 

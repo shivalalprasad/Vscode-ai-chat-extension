@@ -28,7 +28,7 @@ function loadEnvFile() {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("AI Chat Assistant extension is now active!")
+  console.log("Glitchy 🤌 extension is now active!")
 
   // Load environment variables
   loadEnvFile()
@@ -60,7 +60,7 @@ class AIChatPanel {
 
     const panel = vscode.window.createWebviewPanel(
       AIChatPanel.viewType,
-      "🤖 AI Chat Assistant",
+      "Glitchy 🤌",
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,
@@ -358,7 +358,7 @@ class AIChatPanel {
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>AI Chat Assistant</title>
+                <title>Glitchy 🤌</title>
                 <style>
                   body { margin: 0; padding: 0; overflow: hidden; }
                 </style>

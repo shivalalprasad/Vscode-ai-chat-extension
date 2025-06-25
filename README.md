@@ -1,13 +1,13 @@
-# AI Chat Assistant for Developers
+# Glitchy 🤌 - AI Chat Assistant for Developers
 
-A Visual Studio Code extension that provides an in-editor conversational AI interface with workspace code awareness and file-attachment context.
+A Visual Studio Code extension that provides Glitchy 🤌, your mischievous AI coding companion with workspace code awareness and file-attachment context.
 
 ## Features
 
 - **React-based WebView Chat Panel**: Clean, responsive chat interface with markdown rendering and syntax highlighting
 - **File Attachment Support**: Use `@filename.ext` syntax to attach files from your workspace
 - **Context-Aware Communication**: "Use Current File" button to include active editor content or selection
-- **Code Application**: Apply AI-generated code directly to your files with one click
+- **Code Application**: Apply Glitchy's 🤌 generated code directly to your files with one click
 - **Workspace Integration**: Full integration with VS Code's file system and editor APIs
 - **Google Gemini Integration**: Powered by Google's Gemini AI models
 
@@ -82,14 +82,14 @@ GEMINI_MODEL=gemini-1.5-flash
 ### Starting the Chat
 
 1. Open the Command Palette (`Ctrl/Cmd + Shift + P`)
-2. Type "Start AI Chat Assistant" and press Enter
-3. The chat panel will open in a new webview
+2. Type "Start Glitchy 🤌" and press Enter
+3. The chat panel will open in a new webview with your AI companion
 
 ### Basic Chat
 
 - Type your message in the input box at the bottom
 - Press Enter or click Send to send your message
-- The AI will respond with helpful information, code examples, or suggestions
+- Glitchy 🤌 will respond with helpful information, code examples, or suggestions
 
 ### File Attachments
 
@@ -101,17 +101,17 @@ GEMINI_MODEL=gemini-1.5-flash
 
 - Click the "📄 Use Current File" button to include your active editor content
 - If you have text selected, only the selection will be included
-- Otherwise, the entire file content will be sent to the AI
+- Otherwise, the entire file content will be sent to Glitchy 🤌
 
 ### Applying Code Changes
 
-- When the AI provides code that references a specific file, you'll see "💾 Apply to filename" buttons
+- When Glitchy 🤌 provides code that references a specific file, you'll see "💾 Apply to filename" buttons
 - Click these buttons to automatically apply the code changes to the referenced files
 - The extension will update the files in your workspace
 
 ## Commands
 
-- `Start AI Chat Assistant`: Opens the chat panel
+- `Start Glitchy 🤌`: Opens the chat panel with your mischievous AI companion
 
 ## Settings
 

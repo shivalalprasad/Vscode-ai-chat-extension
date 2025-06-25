@@ -37,7 +37,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
     <div className={`message-bubble ${message.sender}`}>
       <div className="message-header">
         <span className="sender-name">
-          {message.sender === "user" ? "👤 You" : message.sender === "ai" ? "🤖 AI Assistant" : "⚠️ System"}
+          {message.sender === "user" ? "👤 You" : message.sender === "ai" ? "Glitchy 🤌" : "⚠️ System"}
         </span>
         <span className="timestamp">{message.timestamp.toLocaleTimeString()}</span>
       </div>

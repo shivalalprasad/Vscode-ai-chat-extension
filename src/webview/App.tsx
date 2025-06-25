@@ -212,8 +212,7 @@ export const App: React.FC = () => {
       <div className="header">
         <div className="header-left">
           <h1>
-            🤖 AI Chat Assistant
-            <div className={`status-indicator ${isConnected ? "connected" : "disconnected"}`}></div>
+            Glitchy 🤌<div className={`status-indicator ${isConnected ? "connected" : "disconnected"}`}></div>
           </h1>
           {currentFileInfo && <span className="current-file-indicator">📄 {currentFileInfo.name}</span>}
         </div>
@@ -228,6 +227,32 @@ export const App: React.FC = () => {
       </div>
 
       <ChatPanel messages={messages} isLoading={isLoading} />
+
+      {messages.length === 0 && (
+        <div className="welcome-message">
+          <h2>Welcome to Glitchy 🤌! 👋</h2>
+          <p>Your mischievous AI coding companion powered by Google Gemini</p>
+
+          <div className="welcome-features">
+            <div className="feature-card">
+              <h3>📄 File Context</h3>
+              <p>Use @filename or "Use Current File" to include code context in your conversations</p>
+            </div>
+            <div className="feature-card">
+              <h3>🚀 Quick Actions</h3>
+              <p>Explain code, find bugs, generate tests, and optimize performance with one click</p>
+            </div>
+            <div className="feature-card">
+              <h3>💡 Smart Suggestions</h3>
+              <p>Get intelligent code suggestions, best practices, and architectural advice</p>
+            </div>
+            <div className="feature-card">
+              <h3>🔧 Code Generation</h3>
+              <p>Generate boilerplate code, documentation, and comprehensive test suites</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="input-section">
         {/* Quick Actions */}

@@ -112,11 +112,8 @@ class AIChatPanel {
             case "getFilteredFiles":
               await this._handleGetFilteredFiles()
               break
-            case "quickAction":
-              await this._handleQuickAction(message.data.action)
-              break
             case "selectFile":
-              await this._handleSelectFile(message.data.filePath, message.data.action)
+              await this._handleFileAttachment(message.data.filePath)
               break
           }
         } catch (error) {
@@ -134,19 +131,41 @@ class AIChatPanel {
 
   private async _handleSendMessage(data: { message: string; attachedFiles: string[] }) {
     try {
-      let fullMessage = data.message
-      const fileContents: string[] = []
+      let fullMessage = ""
 
-      // Process attached files
-      for (const filename of data.attachedFiles) {
-        const content = await this._fileService.getFileContent(filename)
-        if (content) {
-          fileContents.push(`**File: ${filename}**\n\`\`\`\n${content}\n\`\`\``)
+      // Add system context if files are attached
+      if (data.attachedFiles.length > 0) {
+        fullMessage += `**CONTEXT: Code Analysis Request**
+
+The user has attached the following code files for analysis. Please review the code and then respond to their question/request.
+
+**ATTACHED CODE FILES:**
+
+`
+
+        // Process attached files with proper formatting
+        for (const filename of data.attachedFiles) {
+          const content = await this._fileService.getFileContent(filename)
+          if (content) {
+            const extension = filename.split(".").pop()?.toLowerCase() || ""
+            fullMessage += `### File: \`${filename}\`
+\`\`\`${extension}
+${content}
+\`\`\`
+
+`
+          }
         }
-      }
 
-      if (fileContents.length > 0) {
-        fullMessage += "\n\n**Attached files:**\n" + fileContents.join("\n\n")
+        fullMessage += `---
+
+**USER REQUEST:**
+${data.message}
+
+Please analyze the attached code and respond to the user's request above.`
+      } else {
+        // No files attached, just send the user message
+        fullMessage = data.message
       }
 
       const response = await this._geminiService.sendMessage(fullMessage)
@@ -254,69 +273,15 @@ class AIChatPanel {
     }
   }
 
-  private async _handleQuickAction(action: string) {
-    try {
-      const activeEditor = vscode.window.activeTextEditor
-
-      if (activeEditor) {
-        // If there's an active file, use it directly
-        await this._handleGetCurrentFile()
-      } else {
-        // No active file, show file picker
-        this._panel.webview.postMessage({
-          type: "showFilePicker",
-          data: { action },
-        })
-      }
-    } catch (error) {
-      console.error("Error handling quick action:", error)
-      this._panel.webview.postMessage({
-        type: "error",
-        data: { message: `Failed to execute action: ${error}` },
-      })
-    }
-  }
-
-  private async _handleSelectFile(filePath: string, action: string) {
+  private async _handleFileAttachment(filePath: string) {
     try {
       const content = await this._fileService.getFileContent(filePath)
       if (content) {
-        const extension = path.extname(filePath).toLowerCase()
-        const languageMap: Record<string, string> = {
-          ".ts": "typescript",
-          ".tsx": "typescript",
-          ".js": "javascript",
-          ".jsx": "javascript",
-          ".py": "python",
-          ".java": "java",
-          ".cpp": "cpp",
-          ".c": "c",
-          ".cs": "csharp",
-          ".php": "php",
-          ".rb": "ruby",
-          ".go": "go",
-          ".rs": "rust",
-          ".swift": "swift",
-          ".kt": "kotlin",
-          ".scala": "scala",
-          ".html": "html",
-          ".css": "css",
-          ".scss": "scss",
-          ".json": "json",
-          ".yaml": "yaml",
-          ".yml": "yaml",
-          ".md": "markdown",
-          ".sql": "sql",
-          ".sh": "bash",
-          ".dockerfile": "dockerfile",
-        }
-
-        const language = languageMap[extension] || ""
         const filename = path.basename(filePath)
 
         this._panel.webview.postMessage({
-          type: "selectedFileContent",
-          data: { filename, content, language },
+          type: "fileContent",
+          data: { filename, content },
         })
       } else {
         this._panel.webview.postMessage({
@@ -325,10 +290,10 @@ class AIChatPanel {
         })
       }
     } catch (error) {
-      console.error("Error selecting file:", error)
+      console.error("Error attaching file:", error)
       this._panel.webview.postMessage({
         type: "error",
-        data: { message: `Failed to select file: ${error}` },
+        data: { message: `Failed to attach file: ${error}` },
       })
     }
   }

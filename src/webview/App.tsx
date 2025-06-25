@@ -189,10 +189,6 @@ export const App: React.FC = () => {
     setMessages([])
   }, [])
 
-  const handleQuickAction = useCallback((action: string) => {
-    vscode.postMessage({ type: "quickAction", data: { action } })
-  }, [])
-
   const handleFileSelect = useCallback(
     (file: FileInfo) => {
       setShowFilePicker(false)
@@ -255,24 +251,17 @@ export const App: React.FC = () => {
       )}
 
       <div className="input-section">
-        {/* Quick Actions */}
-        <div className="quick-actions">
-          <span className="quick-actions-label">Quick Actions:</span>
-          <button className="quick-action-btn" onClick={() => handleQuickAction("explain")}>
-            💡 Explain Code
+        {/* File Selector */}
+        <div className="file-selector">
+          <span className="file-selector-label">📁 Select Files:</span>
+          <button className="file-selector-btn" onClick={() => setShowFilePicker(true)}>
+            📄 Browse Files
           </button>
-          <button className="quick-action-btn" onClick={() => handleQuickAction("findBugs")}>
-            🐛 Find Bugs
-          </button>
-          <button className="quick-action-btn" onClick={() => handleQuickAction("generateTests")}>
-            🧪 Generate Tests
-          </button>
-          <button className="quick-action-btn" onClick={() => handleQuickAction("optimize")}>
-            ⚡ Optimize
-          </button>
-          <button className="quick-action-btn" onClick={() => handleQuickAction("addComments")}>
-            📝 Add Comments
-          </button>
+          {currentFileInfo && (
+            <button className="file-selector-btn current-file" onClick={handleUseCurrentFile}>
+              📄 Use Current File ({currentFileInfo.name})
+            </button>
+          )}
         </div>
 
         <FileAttachment
@@ -288,10 +277,13 @@ export const App: React.FC = () => {
       <FilePickerModal
         isOpen={showFilePicker}
         onClose={() => setShowFilePicker(false)}
-        onSelectFile={handleFileSelect}
+        onSelectFile={(file) => {
+          setShowFilePicker(false)
+          handleFileAttach(file.relativePath)
+        }}
         files={filteredFiles}
-        title="Select a file to analyze"
-        description="Choose a code file from your workspace to perform the selected action."
+        title="Select files to attach"
+        description="Choose files from your workspace to include as context."
       />
     </div>
   )

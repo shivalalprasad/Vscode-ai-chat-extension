@@ -390,68 +390,64 @@ body {
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.quick-actions {
+/* File Selector */
+.file-selector {
   padding: 8px 12px; /* VS Code standard padding */
   border-bottom: 1px solid #404040; /* VS Code standard border */
   display: flex;
-  gap: 6px; /* VS Code standard gap */
+  gap: 8px; /* VS Code standard gap */
   flex-wrap: wrap;
   align-items: center;
+  background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
 }
 
-.quick-actions-label {
+.file-selector-label {
   font-size: 12px;
   color: #888;
   font-weight: 600;
   margin-right: 6px; /* VS Code standard margin */
 }
 
-.quick-action-btn {
+.file-selector-btn {
   background: #37373d;
   color: #cccccc;
   border: 1px solid #555; /* VS Code standard border */
-  padding: 4px 8px; /* VS Code standard padding */
+  padding: 6px 12px; /* VS Code standard padding */
   border-radius: 4px; /* VS Code standard border radius */
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 3px; /* VS Code standard gap */
-  height: 22px; /* VS Code standard height */
+  gap: 4px; /* VS Code standard gap */
+  height: 28px; /* VS Code standard height */
+  font-weight: 500;
 }
 
-.quick-action-btn:hover {
+.file-selector-btn:hover {
   background: #404040;
   border-color: #007acc;
   color: #007acc;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 122, 204, 0.2);
 }
 
-.quick-action-btn.loading {
-  opacity: 0.6;
-  cursor: not-allowed;
+.file-selector-btn.current-file {
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+  color: white;
+  border-color: #007acc;
 }
 
-.quick-action-btn.loading::after {
-  content: "...";
-  animation: dots 1.5s infinite;
+.file-selector-btn.current-file:hover {
+  background: linear-gradient(135deg, #1177bb 0%, #0066b3 100%);
+  color: white;
 }
 
-@keyframes dots {
-  0%,
-  20% {
-    content: "";
-  }
-  40% {
-    content: ".";
-  }
-  60% {
-    content: "..";
-  }
-  80%,
-  100% {
-    content: "...";
-  }
+/* Remove all quick-action related styles */
+.quick-actions,
+.quick-actions-label,
+.quick-action-btn {
+  display: none;
 }
 
 .file-attachments {
@@ -947,7 +943,7 @@ body {
     padding: 8px; /* VS Code standard mobile padding */
   }
 
-  .quick-actions {
+  .file-selector {
     padding: 6px 8px; /* VS Code standard mobile padding */
   }
 

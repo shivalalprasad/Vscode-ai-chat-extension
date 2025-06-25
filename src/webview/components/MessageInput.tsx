@@ -42,7 +42,53 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
 
       if (atMatch) {
         const query = atMatch[1].toLowerCase()
-        const filtered = workspaceFiles.filter((file) => file.toLowerCase().includes(query)).slice(0, 10)
+
+        // Filter out unwanted files and directories
+        const filtered = workspaceFiles
+          .filter((file) => {
+            // Ignore common unwanted files and directories
+            const unwantedPatterns = [
+              "node_modules/",
+              ".git/",
+              ".vscode/",
+              "out/",
+              "dist/",
+              "build/",
+              ".next/",
+              ".nuxt/",
+              "coverage/",
+              ".nyc_output/",
+              ".DS_Store",
+              "Thumbs.db",
+              "*.log",
+              "*.lock",
+              "*.map",
+              "*.min.js",
+              "*.min.css",
+              "package-lock.json",
+              "yarn.lock",
+              ".env",
+              ".env.local",
+              ".env.production",
+              ".env.development",
+            ]
+
+            // Check if file matches any unwanted pattern
+            const isUnwanted = unwantedPatterns.some((pattern) => {
+              if (pattern.includes("*")) {
+                const regex = new RegExp(pattern.replace(/\*/g, ".*"))
+                return regex.test(file.toLowerCase())
+              }
+              return file.toLowerCase().includes(pattern.toLowerCase())
+            })
+
+            if (isUnwanted) return false
+
+            // Only include files that match the query
+            return file.toLowerCase().includes(query)
+          })
+          .slice(0, 10)
+
         setSuggestions(filtered)
         setShowSuggestions(filtered.length > 0)
       } else {

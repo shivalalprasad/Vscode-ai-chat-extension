@@ -1,17 +1,37 @@
 import * as vscode from "vscode"
 import * as path from "path"
-import { config } from "dotenv"
+import * as fs from "fs"
 import { OpenAIService } from "./utils/openai-service"
 import { FileService } from "./utils/file-service"
 
-// Load environment variables from the workspace root
-const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
-if (workspaceRoot) {
-  config({ path: path.join(workspaceRoot, ".env") })
+// Function to load .env file manually
+function loadEnvFile() {
+  const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+  if (workspaceRoot) {
+    const envPath = path.join(workspaceRoot, ".env")
+    if (fs.existsSync(envPath)) {
+      const envContent = fs.readFileSync(envPath, "utf8")
+      const envLines = envContent.split("\n")
+
+      for (const line of envLines) {
+        const trimmedLine = line.trim()
+        if (trimmedLine && !trimmedLine.startsWith("#")) {
+          const [key, ...valueParts] = trimmedLine.split("=")
+          if (key && valueParts.length > 0) {
+            const value = valueParts.join("=").replace(/^["']|["']$/g, "")
+            process.env[key.trim()] = value.trim()
+          }
+        }
+      }
+    }
+  }
 }
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("AI Chat Assistant extension is now active!")
+
+  // Load environment variables
+  loadEnvFile()
 
   const disposable = vscode.commands.registerCommand("aiChatAssistant.start", () => {
     AIChatPanel.createOrShow(context.extensionUri)

@@ -7,7 +7,10 @@
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
       "outFiles": ["${workspaceFolder}/out/**/*.js"],
-      "preLaunchTask": "${workspaceFolder}/npm: watch"
+      "env": {
+        "OPENAI_API_KEY": "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",
+        "OPENAI_MODEL": "gpt-4"
+      }
     }
   ]
 }

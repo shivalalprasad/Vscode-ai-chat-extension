@@ -13,20 +13,23 @@ interface MessageBubbleProps {
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onApplyToFile }) => {
   const formatContent = (content: string) => {
     // Configure marked with highlight.js
-    marked.setOptions({
-      highlight: (code, lang) => {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return hljs.highlight(code, { language: lang }).value
-          } catch (err) {
-            console.error("Highlight error:", err)
-          }
-        }
-        return hljs.highlightAuto(code).value
-      },
-    })
+    const renderer = new marked.Renderer()
 
-    return marked(content)
+    const originalCode = renderer.code
+    renderer.code = (code: string, language: string | undefined) => {
+      if (language && hljs.getLanguage(language)) {
+        try {
+          const highlighted = hljs.highlight(code, { language }).value
+          return `<pre><code class="hljs language-${language}">${highlighted}</code></pre>`
+        } catch (err) {
+          console.error("Highlight error:", err)
+        }
+      }
+      const highlighted = hljs.highlightAuto(code).value
+      return `<pre><code class="hljs">${highlighted}</code></pre>`
+    }
+
+    return marked(content, { renderer })
   }
 
   const extractCodeBlocks = (content: string) => {

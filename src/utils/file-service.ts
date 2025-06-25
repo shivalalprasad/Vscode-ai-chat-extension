@@ -1,4 +1,5 @@
 import * as vscode from "vscode"
+import * as path from "path"
 
 export class FileService {
   async getFileContent(filename: string): Promise<string | null> {
@@ -47,7 +48,7 @@ export class FileService {
       }
 
       // If file doesn't exist, create it in the first workspace folder
-      const newFileUri = vscode.Uri.joinPath(workspaceFolders[0].uri, filename)
+      const newFileUri = vscode.Uri.file(path.join(workspaceFolders[0].uri.fsPath, filename))
       const edit = new vscode.WorkspaceEdit()
       edit.createFile(newFileUri)
       edit.insert(newFileUri, new vscode.Position(0, 0), content)

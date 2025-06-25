@@ -38,8 +38,8 @@ class AIChatPanel {
       {
         enableScripts: true,
         localResourceRoots: [
-          vscode.Uri.joinPath(extensionUri, "media"),
-          vscode.Uri.joinPath(extensionUri, "out", "webview"),
+          vscode.Uri.file(path.join(extensionUri.fsPath, "media")),
+          vscode.Uri.file(path.join(extensionUri.fsPath, "out", "webview")),
         ],
       },
     )
@@ -179,9 +179,13 @@ class AIChatPanel {
   }
 
   private _getHtmlForWebview(webview: vscode.Webview) {
-    const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "webview", "webview.js"))
+    const scriptUri = webview.asWebviewUri(
+      vscode.Uri.file(path.join(this._extensionUri.fsPath, "out", "webview", "webview.js")),
+    )
 
-    const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "webview", "webview.css"))
+    const styleUri = webview.asWebviewUri(
+      vscode.Uri.file(path.join(this._extensionUri.fsPath, "out", "webview", "webview.css")),
+    )
 
     const nonce = getNonce()
 

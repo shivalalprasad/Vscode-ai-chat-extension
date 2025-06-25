@@ -9,7 +9,7 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
 - **Context-Aware Communication**: "Use Current File" button to include active editor content or selection
 - **Code Application**: Apply AI-generated code directly to your files with one click
 - **Workspace Integration**: Full integration with VS Code's file system and editor APIs
-- **OpenAI Integration**: Powered by GPT-4 or GPT-3.5-turbo models
+- **Google Gemini Integration**: Powered by Google's Gemini AI models
 
 ## Installation
 
@@ -18,7 +18,7 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
 - Node.js (v16 or higher)
 - npm or yarn
 - Visual Studio Code (v1.74.0 or higher)
-- OpenAI API key
+- Google Gemini API key
 
 ### Development Setup
 
@@ -33,38 +33,49 @@ A Visual Studio Code extension that provides an in-editor conversational AI inte
    npm install
    \`\`\`
 
-3. Configure your OpenAI API key:
+3. Get your Gemini API key:
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Copy the API key
+
+4. Configure your Gemini API key:
    \`\`\`bash
    # Copy the example environment file
    cp .env.example .env
    
-   # Edit .env and add your OpenAI API key
-   # OPENAI_API_KEY=your_actual_api_key_here
-   # OPENAI_MODEL=gpt-4
+   # Edit .env and add your Gemini API key
+   # GEMINI_API_KEY=your_actual_api_key_here
+   # GEMINI_MODEL=gemini-1.5-flash
    \`\`\`
 
-4. Build the extension:
+5. Build the extension:
    \`\`\`bash
    npm run compile
    \`\`\`
 
-5. Open the project in VS Code and press `F5` to run the extension in a new Extension Development Host window.
+6. Open the project in VS Code and press `F5` to run the extension in a new Extension Development Host window.
 
 ### Configuration
 
 The extension uses environment variables for configuration:
 
-- `OPENAI_API_KEY`: Your OpenAI API key (required)
-- `OPENAI_MODEL`: OpenAI model to use (default: "gpt-4", can also use "gpt-3.5-turbo")
+- `GEMINI_API_KEY`: Your Google Gemini API key (required)
+- `GEMINI_MODEL`: Gemini model to use (default: "gemini-1.5-flash")
 
 Create a `.env` file in the root directory:
 
 \`\`\`env
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash
 \`\`\`
 
 **Important**: Never commit your `.env` file to version control. The `.env` file is already included in `.gitignore`.
+
+## Available Models
+
+- ✅ `gemini-1.5-flash` (Fast and efficient, free tier available)
+- ✅ `gemini-1.5-pro` (More capable, may require paid usage)
+- ✅ `gemini-pro` (Legacy model)
 
 ## Usage
 
@@ -104,8 +115,8 @@ OPENAI_MODEL=gpt-4
 
 ## Settings
 
-- `aiChatAssistant.openaiApiKey`: Your OpenAI API key (required)
-- `aiChatAssistant.model`: OpenAI model to use (default: "gpt-4")
+- `aiChatAssistant.geminiApiKey`: Your Google Gemini API key (required)
+- `aiChatAssistant.model`: Gemini model to use (default: "gemini-1.5-flash")
 
 ## Development
 
@@ -134,7 +145,7 @@ npm run vscode:prepublish
 src/
 ├── extension.ts              # Main extension entry point
 ├── utils/
-│   ├── openai-service.ts    # OpenAI API integration
+│   ├── gemini-service.ts    # Google Gemini API integration
 │   └── file-service.ts      # File system operations
 └── webview/
     ├── App.tsx              # Main React app
@@ -175,6 +186,6 @@ If you encounter any issues or have questions:
 - Initial release
 - React-based chat interface
 - File attachment support with @filename syntax
-- OpenAI integration with environment variable configuration
+- Google Gemini integration with environment variable configuration
 - Code application feature
 - Workspace file integration

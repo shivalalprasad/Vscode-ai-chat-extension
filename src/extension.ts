@@ -1,7 +1,7 @@
 import * as vscode from "vscode"
 import * as path from "path"
 import * as fs from "fs"
-import { OpenAIService } from "./utils/openai-service"
+import { GeminiService } from "./utils/gemini-service"
 import { FileService } from "./utils/file-service"
 
 // Function to load .env file manually
@@ -47,7 +47,7 @@ class AIChatPanel {
   private readonly _panel: vscode.WebviewPanel
   private readonly _extensionUri: vscode.Uri
   private _disposables: vscode.Disposable[] = []
-  private _openaiService: OpenAIService
+  private _geminiService: GeminiService
   private _fileService: FileService
 
   public static createOrShow(extensionUri: vscode.Uri) {
@@ -74,7 +74,7 @@ class AIChatPanel {
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
     this._panel = panel
     this._extensionUri = extensionUri
-    this._openaiService = new OpenAIService()
+    this._geminiService = new GeminiService()
     this._fileService = new FileService()
 
     this._update()
@@ -118,7 +118,7 @@ class AIChatPanel {
         fullMessage += "\n\nAttached files:\n" + fileContents.join("\n\n")
       }
 
-      const response = await this._openaiService.sendMessage(fullMessage)
+      const response = await this._geminiService.sendMessage(fullMessage)
 
       this._panel.webview.postMessage({
         type: "aiResponse",

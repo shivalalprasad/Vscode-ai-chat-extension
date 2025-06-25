@@ -22,7 +22,6 @@ export const App: React.FC = () => {
   const [workspaceFiles, setWorkspaceFiles] = useState<string[]>([])
 
   useEffect(() => {
-    // Request workspace files on load
     vscode.postMessage({ type: "getWorkspaceFiles" })
 
     const handleMessage = (event: MessageEvent) => {
@@ -121,23 +120,16 @@ export const App: React.FC = () => {
     setAttachedFiles((prev) => prev.filter((f) => f.filename !== filename))
   }
 
-  const handleApplyToFile = (filename: string, content: string) => {
-    vscode.postMessage({
-      type: "applyToFile",
-      data: { filename, content },
-    })
-  }
-
   return (
     <div className="app">
       <div className="header">
         <h1>AI Chat Assistant</h1>
-        <button className="current-file-btn" onClick={handleUseCurrentFile} title="Use current file or selection">
+        <button className="current-file-btn" onClick={handleUseCurrentFile}>
           📄 Use Current File
         </button>
       </div>
 
-      <ChatPanel messages={messages} isLoading={isLoading} onApplyToFile={handleApplyToFile} />
+      <ChatPanel messages={messages} isLoading={isLoading} />
 
       <div className="input-section">
         <FileAttachment

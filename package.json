@@ -3,7 +3,7 @@
   "displayName": "AI Chat Assistant for Developers",
   "version": "1.0.0",
   "private": true,
-  "description": "Conversational AI interface with workspace code awareness and file-attachment context",
+  "description": "Conversational AI interface with workspace code awareness",
   "categories": [
     "Other",
     "Machine Learning"
@@ -11,12 +11,7 @@
   "publisher": "your-publisher-name",
   "main": "./out/extension.js",
   "scripts": {
-    "build": "next build",
     "compile": "tsc -p ./ && webpack --mode production",
-    "dev": "next dev",
-    "lint": "next lint",
-    "start": "next start",
-    "test-compile": "tsc -p ./",
     "vscode:prepublish": "npm run compile",
     "watch": "tsc -watch -p ./",
     "webpack": "webpack --mode development",
@@ -28,32 +23,12 @@
         "command": "aiChatAssistant.start",
         "title": "Start AI Chat Assistant"
       }
-    ],
-    "configuration": {
-      "title": "AI Chat Assistant",
-      "properties": {
-        "aiChatAssistant.openaiApiKey": {
-          "type": "string",
-          "default": "",
-          "description": "OpenAI API Key for AI Chat Assistant"
-        },
-        "aiChatAssistant.model": {
-          "type": "string",
-          "default": "gpt-4",
-          "enum": [
-            "gpt-4",
-            "gpt-3.5-turbo"
-          ],
-          "description": "OpenAI model to use"
-        }
-      }
-    }
+    ]
   },
   "activationEvents": [
     "onCommand:aiChatAssistant.start"
   ],
   "dependencies": {
-    "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
     "@radix-ui/react-aspect-ratio": "latest",
@@ -81,12 +56,12 @@
     "@radix-ui/react-toggle": "latest",
     "@radix-ui/react-toggle-group": "latest",
     "@radix-ui/react-tooltip": "latest",
-    "autoprefixer": "^10.4.20",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "axios": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "latest",
-    "date-fns": "4.1.0",
     "dotenv": "latest",
     "embla-carousel-react": "latest",
     "highlight.js": "latest",
@@ -106,22 +81,20 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "latest",
-    "vscode": "latest",
-    "zod": "^3.24.1"
+    "vscode": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/vscode": "^1.74.0",
-    "css-loader": "^6.7.3",
+    "css-loader": "^6.8.0",
     "postcss": "^8.5",
-    "style-loader": "^3.3.1",
-    "tailwindcss": "^3.4.17",
-    "ts-loader": "^9.4.2",
+    "style-loader": "^3.3.0",
+    "ts-loader": "^9.5.0",
     "typescript": "^5",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.0"
   },
   "engines": {
     "vscode": "^1.74.0"

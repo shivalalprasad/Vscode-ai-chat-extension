@@ -8,10 +8,9 @@ import type { Message } from "../types"
 interface ChatPanelProps {
   messages: Message[]
   isLoading: boolean
-  onApplyToFile: (filename: string, content: string) => void
 }
 
-export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, onApplyToFile }) => {
+export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,18 +23,12 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading, onApp
         {messages.length === 0 && (
           <div className="welcome-message">
             <h2>Welcome to AI Chat Assistant! 👋</h2>
-            <p>Start a conversation with your AI assistant. You can:</p>
-            <ul>
-              <li>Ask questions about your code</li>
-              <li>Attach files using @filename syntax</li>
-              <li>Use the "Use Current File" button to include your active editor content</li>
-              <li>Apply AI-generated code directly to your files</li>
-            </ul>
+            <p>Start a conversation with your AI assistant.</p>
           </div>
         )}
 
         {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} onApplyToFile={onApplyToFile} />
+          <MessageBubble key={message.id} message={message} />
         ))}
 
         {isLoading && (

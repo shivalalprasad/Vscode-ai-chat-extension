@@ -25,14 +25,12 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
       const position = textarea.selectionStart
       setCursorPosition(position)
 
-      // Check for @ symbol followed by text
       const beforeCursor = value.substring(0, position)
       const atMatch = beforeCursor.match(/@(\w*)$/)
 
       if (atMatch) {
         const query = atMatch[1].toLowerCase()
         const filtered = workspaceFiles.filter((file) => file.toLowerCase().includes(query)).slice(0, 10)
-
         setSuggestions(filtered)
         setShowSuggestions(filtered.length > 0)
       } else {
@@ -58,7 +56,6 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
       setMessage(newValue)
       setShowSuggestions(false)
 
-      // Focus back to textarea
       setTimeout(() => {
         textarea.focus()
         const newPosition = beforeCursor.replace(/@(\w*)$/, `@${filename}`).length

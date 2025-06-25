@@ -15,16 +15,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "node_modules",
-    ".vscode-test",
-    "out",
-    "app",
-    "components",
-    "hooks",
-    "lib",
-    "styles",
-    "public",
-    "*.config.*"
-  ]
+  "exclude": ["node_modules", ".vscode-test", "out"]
 }

@@ -5,7 +5,6 @@ export class OpenAIService {
   private model: string
 
   constructor() {
-    // Use environment variable instead of VS Code settings
     this.apiKey = process.env.OPENAI_API_KEY || ""
     this.model = process.env.OPENAI_MODEL || "gpt-4"
 
@@ -16,7 +15,7 @@ export class OpenAIService {
 
   async sendMessage(message: string): Promise<string> {
     if (!this.apiKey) {
-      throw new Error("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.")
+      throw new Error("OpenAI API key not configured")
     }
 
     try {
@@ -27,8 +26,7 @@ export class OpenAIService {
           messages: [
             {
               role: "system",
-              content:
-                "You are a helpful AI assistant for developers. You can help with code analysis, generation, refactoring, and general programming questions. When providing code examples, use appropriate syntax highlighting.",
+              content: "You are a helpful AI assistant for developers.",
             },
             {
               role: "user",
@@ -48,11 +46,7 @@ export class OpenAIService {
 
       return response.data.choices[0].message.content
     } catch (error: any) {
-      if (error.response) {
-        throw new Error(`OpenAI API Error: ${error.response.data.error?.message || "Unknown error"}`)
-      } else {
-        throw new Error(`Network Error: ${error.message}`)
-      }
+      throw new Error(`OpenAI API Error: ${error.response?.data?.error?.message || error.message}`)
     }
   }
 }

@@ -4,7 +4,7 @@ import { config } from "dotenv"
 import { OpenAIService } from "./utils/openai-service"
 import { FileService } from "./utils/file-service"
 
-// Load environment variables from .env file
+// Load environment variables
 config()
 
 export function activate(context: vscode.ExtensionContext) {
@@ -41,10 +41,7 @@ class AIChatPanel {
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,
-        localResourceRoots: [
-          vscode.Uri.file(path.join(extensionUri.fsPath, "media")),
-          vscode.Uri.file(path.join(extensionUri.fsPath, "out", "webview")),
-        ],
+        localResourceRoots: [vscode.Uri.file(path.join(extensionUri.fsPath, "out", "webview"))],
       },
     )
 
@@ -72,9 +69,6 @@ class AIChatPanel {
           case "getFileContent":
             await this._handleGetFileContent(message.data.filename)
             break
-          case "applyToFile":
-            await this._handleApplyToFile(message.data)
-            break
           case "getWorkspaceFiles":
             await this._handleGetWorkspaceFiles()
             break
@@ -90,7 +84,6 @@ class AIChatPanel {
       let fullMessage = data.message
       const fileContents: string[] = []
 
-      // Process attached files
       for (const filename of data.attachedFiles) {
         const content = await this._fileService.getFileContent(filename)
         if (content) {
@@ -109,10 +102,9 @@ class AIChatPanel {
         data: { message: response },
       })
     } catch (error) {
-      vscode.window.showErrorMessage(`AI Chat Error: ${error}`)
       this._panel.webview.postMessage({
         type: "error",
-        data: { message: "Failed to get AI response. Please check your API key and try again." },
+        data: { message: `Error: ${error}` },
       })
     }
   }
@@ -122,22 +114,13 @@ class AIChatPanel {
     if (activeEditor) {
       const document = activeEditor.document
       const selection = activeEditor.selection
-
-      let content = ""
       const filename = path.basename(document.fileName)
-
-      if (!selection.isEmpty) {
-        content = document.getText(selection)
-      } else {
-        content = document.getText()
-      }
+      const content = !selection.isEmpty ? document.getText(selection) : document.getText()
 
       this._panel.webview.postMessage({
         type: "currentFileContent",
         data: { filename, content, isSelection: !selection.isEmpty },
       })
-    } else {
-      vscode.window.showInformationMessage("No active file found")
     }
   }
 
@@ -147,15 +130,6 @@ class AIChatPanel {
       type: "fileContent",
       data: { filename, content },
     })
-  }
-
-  private async _handleApplyToFile(data: { filename: string; content: string }) {
-    try {
-      await this._fileService.writeFileContent(data.filename, data.content)
-      vscode.window.showInformationMessage(`Applied changes to ${data.filename}`)
-    } catch (error) {
-      vscode.window.showErrorMessage(`Failed to apply changes: ${error}`)
-    }
   }
 
   private async _handleGetWorkspaceFiles() {
@@ -178,45 +152,27 @@ class AIChatPanel {
   }
 
   private _update() {
-    const webview = this._panel.webview
-    this._panel.webview.html = this._getHtmlForWebview(webview)
+    this._panel.webview.html = this._getHtmlForWebview()
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview) {
-    const scriptUri = webview.asWebviewUri(
+  private _getHtmlForWebview() {
+    const scriptUri = this._panel.webview.asWebviewUri(
       vscode.Uri.file(path.join(this._extensionUri.fsPath, "out", "webview", "webview.js")),
     )
-
-    const styleUri = webview.asWebviewUri(
-      vscode.Uri.file(path.join(this._extensionUri.fsPath, "out", "webview", "webview.css")),
-    )
-
-    const nonce = getNonce()
 
     return `<!DOCTYPE html>
             <html lang="en">
             <head>
                 <meta charset="UTF-8">
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}';">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link href="${styleUri}" rel="stylesheet">
                 <title>AI Chat Assistant</title>
             </head>
             <body>
                 <div id="root"></div>
-                <script nonce="${nonce}" src="${scriptUri}"></script>
+                <script src="${scriptUri}"></script>
             </body>
             </html>`
   }
-}
-
-function getNonce() {
-  let text = ""
-  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-  }
-  return text
 }
 
 export function deactivate() {}

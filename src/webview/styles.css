@@ -6,112 +6,195 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  background: linear-gradient(135deg, #1e1e1e 0%, #252526 100%);
+  color: #cccccc;
   height: 100vh;
   overflow: hidden;
 }
 
-/* App container */
 .app {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  height: 100vh;
+  background: #1e1e1e;
 }
 
-/* Header */
+/* Header - VS Code spacing */
 .header {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px; /* VS Code standard padding */
+  background: linear-gradient(90deg, #2d2d30 0%, #37373d 100%);
+  border-bottom: 1px solid #007acc; /* VS Code standard border width */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Reduced shadow */
+  min-height: 35px; /* VS Code standard header height */
+}
+
+.header-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 48px;
+  gap: 8px; /* VS Code standard gap */
 }
 
 .header h1 {
-  margin: 0;
-  font-size: 18px;
+  font-size: 13px; /* VS Code standard font size */
   font-weight: 600;
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.status-indicator {
+  color: #ffffff;
   display: flex;
   align-items: center;
   gap: 6px;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
 }
 
-.status-dot {
-  width: 8px;
-  height: 8px;
+.status-indicator {
+  width: 6px; /* VS Code standard indicator size */
+  height: 6px;
   border-radius: 50%;
-  background: #4ade80;
+  background-color: #4caf50;
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0%,
-  100% {
+  0% {
     opacity: 1;
   }
   50% {
     opacity: 0.5;
   }
+  100% {
+    opacity: 1;
+  }
 }
 
-/* Chat panel */
+.current-file-indicator {
+  font-size: 11px;
+  color: #cccccc;
+  background-color: rgba(0, 122, 204, 0.2);
+  padding: 2px 6px; /* VS Code standard padding */
+  border-radius: 2px; /* VS Code standard border radius */
+}
+
+.header-actions {
+  display: flex;
+  gap: 4px; /* VS Code standard gap */
+  align-items: center;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+  color: white;
+  border: 1px solid transparent; /* VS Code standard border */
+  padding: 4px 8px; /* VS Code standard padding */
+  border-radius: 2px; /* VS Code standard border radius */
+  cursor: pointer;
+  font-size: 11px; /* VS Code standard font size */
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 1px 2px rgba(0, 122, 204, 0.3);
+  height: 22px; /* VS Code standard button height */
+}
+
+.action-btn:hover {
+  background: linear-gradient(135deg, #1177bb 0%, #0066b3 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 122, 204, 0.4);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.action-btn.secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  box-shadow: 0 1px 2px rgba(108, 117, 125, 0.3);
+}
+
+.action-btn.secondary:hover {
+  background: linear-gradient(135deg, #7a8288 0%, #6c757d 100%);
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.4);
+}
+
+/* Chat Panel */
 .chat-panel {
   flex: 1;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 48px);
+  background: #1e1e1e;
 }
 
-/* Messages container */
 .messages-container {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 12px; /* VS Code standard padding */
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  gap: 12px; /* VS Code standard gap */
+  scroll-behavior: smooth;
 }
 
-.messages-container::-webkit-scrollbar {
-  width: 6px;
+.welcome-message {
+  text-align: center;
+  padding: 24px 16px; /* VS Code standard padding */
+  background: linear-gradient(135deg, #2d2d30 0%, #37373d 100%);
+  border-radius: 4px; /* VS Code standard border radius */
+  border: 1px solid #404040; /* VS Code standard border */
+  margin: 12px; /* VS Code standard margin */
 }
 
-.messages-container::-webkit-scrollbar-track {
-  background: transparent;
+.welcome-message h2 {
+  margin-bottom: 12px; /* VS Code standard margin */
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.messages-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+.welcome-message p {
+  color: #cccccc;
+  font-size: 16px;
+  margin-bottom: 16px; /* VS Code standard margin */
 }
 
-.messages-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+.welcome-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px; /* VS Code standard gap */
+  margin-top: 20px; /* VS Code standard margin */
+  text-align: left;
 }
 
-/* Message bubbles */
+.feature-card {
+  background: #252526;
+  padding: 12px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  border: 1px solid #404040; /* VS Code standard border */
+}
+
+.feature-card h3 {
+  color: #007acc;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px; /* VS Code standard margin */
+}
+
+.feature-card p {
+  color: #cccccc;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Message Bubbles */
 .message-bubble {
-  max-width: 80%;
-  padding: 12px 16px;
-  border-radius: 18px;
-  word-wrap: break-word;
+  max-width: 85%;
+  padding: 12px 16px; /* VS Code standard padding */
+  border-radius: 12px;
+  margin-bottom: 6px; /* VS Code standard margin */
+  position: relative;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); /* Reduced shadow */
   animation: slideIn 0.3s ease-out;
 }
 
@@ -128,87 +211,158 @@ body {
 
 .message-bubble.user {
   align-self: flex-end;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
   color: white;
   margin-left: auto;
+  border-bottom-right-radius: 4px;
 }
 
 .message-bubble.ai {
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.95);
-  color: #333;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, #2d2d30 0%, #37373d 100%);
+  border: 1px solid #404040; /* VS Code standard border */
+  color: #cccccc;
+  border-bottom-left-radius: 4px;
+}
+
+.message-bubble.system {
+  align-self: center;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  font-size: 14px;
+  max-width: 70%;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px; /* VS Code standard margin */
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.sender-name {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px; /* VS Code standard gap */
+}
+
+.timestamp {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.attachments {
+  margin-bottom: 8px; /* VS Code standard margin */
+  font-size: 12px;
+}
+
+.attachment-tag {
+  display: inline-block;
+  background: rgba(0, 122, 204, 0.2);
+  color: #007acc;
+  padding: 2px 6px; /* VS Code standard padding */
+  border-radius: 8px;
+  margin-left: 6px; /* VS Code standard margin */
+  font-size: 11px;
+  border: 1px solid #007acc; /* VS Code standard border */
 }
 
 .message-content {
-  margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-size: 14px;
 }
 
 .message-content pre {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 8px 12px;
-  border-radius: 8px;
+  background: #1a1a1a;
+  border: 1px solid #404040; /* VS Code standard border */
+  border-radius: 4px; /* VS Code standard border radius */
+  padding: 12px; /* VS Code standard padding */
+  margin: 8px 0; /* VS Code standard margin */
   overflow-x: auto;
-  margin: 8px 0;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-family: "Fira Code", "Courier New", monospace;
   font-size: 13px;
+  position: relative;
+}
+
+.message-content pre::before {
+  content: "Code";
+  position: absolute;
+  top: 6px; /* VS Code standard positioning */
+  right: 8px;
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .message-content code {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  background: rgba(0, 122, 204, 0.1);
+  padding: 1px 4px; /* VS Code standard padding */
+  border-radius: 2px; /* VS Code standard border radius */
+  font-family: "Fira Code", "Courier New", monospace;
   font-size: 13px;
+  color: #007acc;
 }
 
-.message-timestamp {
-  font-size: 11px;
-  opacity: 0.7;
-  margin-top: 4px;
+.message-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
 }
 
-.attached-files {
-  margin-top: 8px;
+.message-actions {
+  margin-top: 8px; /* VS Code standard margin */
   display: flex;
+  gap: 6px; /* VS Code standard gap */
   flex-wrap: wrap;
-  gap: 4px;
 }
 
-.file-tag {
-  background: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 2px 8px;
-  border-radius: 12px;
+.apply-button {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border: 1px solid transparent; /* VS Code standard border */
+  padding: 4px 8px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  cursor: pointer;
   font-size: 11px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(40, 167, 69, 0.3);
 }
 
-/* Loading message */
-.loading-message {
+.apply-button:hover {
+  background: linear-gradient(135deg, #34ce57 0%, #28a745 100%);
+  transform: translateY(-1px);
+}
+
+/* Loading Indicator */
+.loading-indicator {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.8);
-  font-style: italic;
-  align-self: flex-start;
+  gap: 8px; /* VS Code standard gap */
+  padding: 12px; /* VS Code standard padding */
+  color: #007acc;
+  font-size: 14px;
+  background: linear-gradient(135deg, #2d2d30 0%, #37373d 100%);
+  border-radius: 8px;
+  border: 1px solid #404040; /* VS Code standard border */
+  margin: 0 12px; /* VS Code standard margin */
 }
 
 .loading-dots {
   display: flex;
-  gap: 4px;
+  gap: 3px; /* VS Code standard gap */
 }
 
 .loading-dots span {
-  width: 6px;
+  width: 6px; /* VS Code standard size */
   height: 6px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  animation: bounce 1.4s infinite ease-in-out both;
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+  animation: loading-bounce 1.4s ease-in-out infinite both;
 }
 
 .loading-dots span:nth-child(1) {
@@ -218,7 +372,7 @@ body {
   animation-delay: -0.16s;
 }
 
-@keyframes bounce {
+@keyframes loading-bounce {
   0%,
   80%,
   100% {
@@ -229,69 +383,171 @@ body {
   }
 }
 
-/* File selector section */
-.file-selector-section {
-  padding: 8px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* Input Section */
+.input-section {
+  border-top: 1px solid #404040; /* VS Code standard border */
+  background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.quick-actions {
+  padding: 8px 12px; /* VS Code standard padding */
+  border-bottom: 1px solid #404040; /* VS Code standard border */
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 6px; /* VS Code standard gap */
   flex-wrap: wrap;
+  align-items: center;
 }
 
-.file-selector-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 8px;
-  cursor: pointer;
+.quick-actions-label {
   font-size: 12px;
+  color: #888;
+  font-weight: 600;
+  margin-right: 6px; /* VS Code standard margin */
+}
+
+.quick-action-btn {
+  background: #37373d;
+  color: #cccccc;
+  border: 1px solid #555; /* VS Code standard border */
+  padding: 4px 8px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
+  gap: 3px; /* VS Code standard gap */
+  height: 22px; /* VS Code standard height */
 }
 
-.file-selector-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
+.quick-action-btn:hover {
+  background: #404040;
+  border-color: #007acc;
+  color: #007acc;
 }
 
-.file-selector-button:disabled {
-  opacity: 0.5;
+.quick-action-btn.loading {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.selected-files-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+.quick-action-btn.loading::after {
+  content: "...";
+  animation: dots 1.5s infinite;
 }
 
-.selected-file-tag {
-  background: rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 11px;
+@keyframes dots {
+  0%,
+  20% {
+    content: "";
+  }
+  40% {
+    content: ".";
+  }
+  60% {
+    content: "..";
+  }
+  80%,
+  100% {
+    content: "...";
+  }
+}
+
+.file-attachments {
+  padding: 8px 12px; /* VS Code standard padding */
+  border-bottom: 1px solid #404040; /* VS Code standard border */
+}
+
+.attachments-header {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px; /* VS Code standard margin */
+  color: #cccccc;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 4px; /* VS Code standard gap */
 }
 
-/* Message input */
+.attachments-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* VS Code standard gap */
+}
+
+.attachment-item {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* VS Code standard gap */
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+  color: white;
+  padding: 4px 8px; /* VS Code standard padding */
+  border-radius: 6px;
+  font-size: 12px;
+  box-shadow: 0 1px 2px rgba(0, 122, 204, 0.3);
+}
+
+.remove-attachment {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 1px; /* VS Code standard padding */
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px; /* VS Code standard size */
+  height: 14px;
+}
+
+.remove-attachment:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Message Input */
 .message-input-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  bottom: 100%;
+  left: 12px; /* VS Code standard positioning */
+  right: 12px;
+  background: #2d2d30;
+  border: 1px solid #555; /* VS Code standard border */
+  border-radius: 4px; /* VS Code standard border radius */
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.suggestion-item {
+  padding: 8px 12px; /* VS Code standard padding */
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid #404040; /* VS Code standard border */
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* VS Code standard gap */
+}
+
+.suggestion-item:hover {
+  background: #37373d;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
 }
 
 .message-input-form {
   display: flex;
-  padding: 12px 16px;
-  gap: 8px;
+  padding: 12px; /* VS Code standard padding */
+  gap: 8px; /* VS Code standard gap */
   align-items: flex-end;
 }
 
@@ -300,50 +556,63 @@ body {
   position: relative;
 }
 
-.input-wrapper textarea {
+.message-input-form textarea {
   width: 100%;
-  min-height: 40px;
-  max-height: 120px;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
+  background: #1a1a1a;
+  color: #cccccc;
+  border: 1px solid #404040; /* VS Code standard border */
+  border-radius: 8px;
+  padding: 8px 12px; /* VS Code standard padding */
   font-family: inherit;
   font-size: 14px;
   resize: none;
-  outline: none;
+  min-height: 40px;
+  max-height: 120px;
   transition: all 0.2s ease;
+  line-height: 1.4;
 }
 
-.input-wrapper textarea:focus {
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+.message-input-form textarea:focus {
+  outline: none;
+  border-color: #007acc;
+  box-shadow: 0 0 0 1px rgba(0, 122, 204, 0.1); /* VS Code standard focus ring */
 }
 
-.input-wrapper textarea::placeholder {
-  color: #666;
+.message-input-form textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.message-input-form textarea::placeholder {
+  color: #888;
 }
 
 .send-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
   color: white;
-  padding: 10px 16px;
-  border-radius: 12px;
+  border: 1px solid transparent; /* VS Code standard border */
+  padding: 8px 16px; /* VS Code standard padding */
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
+  gap: 6px; /* VS Code standard gap */
+  box-shadow: 0 1px 4px rgba(0, 122, 204, 0.3);
   min-height: 40px;
 }
 
 .send-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1177bb 0%, #0066b3 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 122, 204, 0.4);
+}
+
+.send-button:active {
+  transform: translateY(0);
 }
 
 .send-button:disabled {
@@ -352,199 +621,359 @@ body {
   transform: none;
 }
 
-/* Suggestions dropdown */
-.suggestions-dropdown {
-  position: absolute;
-  bottom: 100%;
-  left: 16px;
-  right: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-  margin-bottom: 4px;
-}
-
-.suggestion-item {
-  padding: 8px 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #333;
-  font-size: 13px;
-  transition: background-color 0.2s ease;
-}
-
-.suggestion-item:hover {
-  background: rgba(102, 126, 234, 0.1);
-}
-
-.suggestion-item:not(:last-child) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* File picker modal */
+/* File Picker Modal */
 .file-picker-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(4px);
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .file-picker-modal {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
+  background: linear-gradient(135deg, #2d2d30 0%, #37373d 100%);
+  border: 1px solid #555; /* VS Code standard border */
+  border-radius: 8px; /* VS Code standard border radius */
   width: 90%;
-  max-width: 600px;
+  max-width: 800px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .file-picker-header {
-  padding: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 16px; /* VS Code standard padding */
+  border-bottom: 1px solid #555; /* VS Code standard border */
+  position: relative;
 }
 
-.file-picker-header h3 {
+.file-picker-header h2 {
+  margin: 0 0 6px 0; /* VS Code standard margin */
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.file-picker-header p {
   margin: 0;
-  color: #333;
-  font-size: 16px;
+  color: #cccccc;
+  font-size: 14px;
 }
 
 .close-button {
+  position: absolute;
+  top: 12px; /* VS Code standard positioning */
+  right: 12px;
   background: none;
   border: none;
-  font-size: 20px;
+  color: #cccccc;
+  font-size: 18px;
   cursor: pointer;
-  color: #666;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 2px; /* VS Code standard padding */
+  border-radius: 2px; /* VS Code standard border radius */
   transition: all 0.2s ease;
 }
 
 .close-button:hover {
-  background: rgba(0, 0, 0, 0.1);
-  color: #333;
+  background: #555;
+  color: #ffffff;
 }
 
-.file-picker-search {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.file-picker-filters {
+  padding: 12px 16px; /* VS Code standard padding */
+  border-bottom: 1px solid #555; /* VS Code standard border */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* VS Code standard gap */
 }
 
-.file-picker-search input {
+.search-container {
+  position: relative;
+}
+
+.search-input {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.5);
-  color: #333;
+  background: #1a1a1a;
+  color: #cccccc;
+  border: 1px solid #555; /* VS Code standard border */
+  border-radius: 4px; /* VS Code standard border radius */
+  padding: 6px 12px; /* VS Code standard padding */
   font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
   outline: none;
+  border-color: #007acc;
 }
 
-.file-picker-search input:focus {
-  border-color: rgba(102, 126, 234, 0.5);
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-}
-
-.file-picker-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px;
-}
-
-.file-picker-item {
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 6px;
+.extension-filters {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #333;
-  font-size: 13px;
-  transition: all 0.2s ease;
-  margin-bottom: 2px;
+  gap: 6px; /* VS Code standard gap */
+  flex-wrap: wrap;
 }
 
-.file-picker-item:hover {
-  background: rgba(102, 126, 234, 0.1);
-}
-
-.file-picker-item.selected {
-  background: rgba(102, 126, 234, 0.2);
-  color: #4c63d2;
-}
-
-/* Welcome message */
-.welcome-message {
-  text-align: center;
-  padding: 32px 16px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.welcome-message h2 {
-  margin: 0 0 16px 0;
-  font-size: 24px;
+.filter-label {
+  font-size: 12px;
+  color: #888;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-.welcome-message p {
-  margin: 0 0 8px 0;
-  opacity: 0.8;
-  line-height: 1.5;
+.extension-tags {
+  display: flex;
+  gap: 4px; /* VS Code standard gap */
+  flex-wrap: wrap;
+}
+
+.extension-tag {
+  background: #37373d;
+  color: #cccccc;
+  border: 1px solid #555; /* VS Code standard border */
+  padding: 2px 6px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s ease;
+}
+
+.extension-tag:hover {
+  background: #404040;
+  border-color: #007acc;
+}
+
+.extension-tag.selected {
+  background: linear-gradient(135deg, #007acc 0%, #005a9e 100%);
+  color: white;
+  border-color: #007acc;
+}
+
+.clear-filters {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 2px 6px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  cursor: pointer;
+  font-size: 11px;
+  transition: background-color 0.2s ease;
+}
+
+.clear-filters:hover {
+  background: #ff5252;
+}
+
+.file-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px; /* VS Code standard padding */
+  min-height: 300px;
+  max-height: 400px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* VS Code standard gap */
+  padding: 8px 12px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent; /* VS Code standard border */
+}
+
+.file-item:hover {
+  background: #37373d;
+  border-color: #555;
+}
+
+.file-item:active {
+  background: #404040;
+}
+
+.file-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 1px; /* VS Code standard margin */
+}
+
+.file-path {
+  font-size: 12px;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px; /* VS Code standard gap */
+  flex-shrink: 0;
+}
+
+.file-size {
+  font-size: 11px;
+  color: #888;
+}
+
+.no-files {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #888;
+  font-style: italic;
+}
+
+.file-picker-footer {
+  padding: 12px 16px; /* VS Code standard padding */
+  border-top: 1px solid #555; /* VS Code standard border */
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px; /* VS Code standard gap */
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: white;
+  border: 1px solid transparent; /* VS Code standard border */
+  padding: 6px 12px; /* VS Code standard padding */
+  border-radius: 4px; /* VS Code standard border radius */
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px; /* VS Code standard width */
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #555 0%, #666 100%);
+  border-radius: 3px; /* VS Code standard border radius */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #666 0%, #777 100%);
+}
+
+/* Syntax highlighting improvements */
+.hljs {
+  background: #1a1a1a !important;
+  color: #cccccc !important;
+  border-radius: 4px; /* VS Code standard border radius */
+}
+
+.hljs-keyword {
+  color: #569cd6 !important;
+}
+.hljs-string {
+  color: #ce9178 !important;
+}
+.hljs-comment {
+  color: #6a9955 !important;
+}
+.hljs-number {
+  color: #b5cea8 !important;
+}
+.hljs-function {
+  color: #dcdcaa !important;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .message-bubble {
-    max-width: 95%;
+  .header {
+    padding: 6px 8px; /* VS Code standard mobile padding */
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: 2px; /* VS Code standard mobile gap */
+  }
+
+  .action-btn {
+    font-size: 10px;
+    padding: 3px 6px; /* VS Code standard mobile padding */
+    height: 20px;
+  }
+
+  .messages-container {
+    padding: 8px; /* VS Code standard mobile padding */
+  }
+
+  .message-input-form {
+    padding: 8px; /* VS Code standard mobile padding */
+  }
+
+  .quick-actions {
+    padding: 6px 8px; /* VS Code standard mobile padding */
   }
 
   .file-picker-modal {
     width: 95%;
-    margin: 16px;
+    max-height: 90vh;
   }
 
-  .message-input-form {
-    padding: 8px 12px;
+  .file-picker-header {
+    padding: 12px; /* VS Code standard mobile padding */
   }
 
-  .header {
-    padding: 8px 12px;
+  .file-picker-filters {
+    padding: 8px 12px; /* VS Code standard mobile padding */
   }
-}
 
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .extension-filters {
+    flex-direction: column;
+    align-items: flex-start;
   }
-}
 
-/* Focus styles for keyboard navigation */
-button:focus-visible,
-textarea:focus-visible,
-input:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.8);
-  outline-offset: 2px;
+  .file-item {
+    padding: 6px 8px; /* VS Code standard mobile padding */
+  }
+
+  .file-picker-footer {
+    padding: 8px 12px; /* VS Code standard mobile padding */
+  }
 }

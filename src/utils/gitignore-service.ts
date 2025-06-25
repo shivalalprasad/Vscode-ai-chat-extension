@@ -32,151 +32,24 @@ export class GitignoreService {
           })
       }
 
-      // Add comprehensive patterns that should always be ignored
+      // Add common patterns that should always be ignored
       this.gitignorePatterns.push(
-        // Dependencies
         "node_modules/**",
-        "bower_components/**",
-        "jspm_packages/**",
-
-        // Build outputs
+        ".git/**",
+        ".vscode/**",
         "out/**",
         "dist/**",
         "build/**",
-        "target/**",
-        "bin/**",
-        "obj/**",
-
-        // Framework specific
         ".next/**",
         ".nuxt/**",
-        ".vuepress/dist/**",
-        ".docusaurus/**",
-
-        // Version control
-        ".git/**",
-        ".svn/**",
-        ".hg/**",
-
-        // IDE/Editor
-        ".vscode/**",
-        ".idea/**",
-        "*.swp",
-        "*.swo",
-        "*~",
-
-        // OS generated
-        ".DS_Store",
-        ".DS_Store?",
-        "._*",
-        ".Spotlight-V100",
-        ".Trashes",
-        "ehthumbs.db",
-        "Thumbs.db",
-
-        // Logs
-        "*.log",
-        "logs/**",
-        "npm-debug.log*",
-        "yarn-debug.log*",
-        "yarn-error.log*",
-
-        // Runtime data
-        "pids/**",
-        "*.pid",
-        "*.seed",
-        "*.pid.lock",
-
-        // Coverage directory used by tools like istanbul
         "coverage/**",
         ".nyc_output/**",
-
-        // Dependency directories
-        "node_modules/**",
-        "jspm_packages/**",
-
-        // Optional npm cache directory
-        ".npm/**",
-
-        // Optional eslint cache
-        ".eslintcache",
-
-        // Microbundle cache
-        ".rpt2_cache/",
-        ".rts2_cache_cjs/",
-        ".rts2_cache_es/",
-        ".rts2_cache_umd/",
-
-        // Optional REPL history
-        ".node_repl_history",
-
-        // Output of 'npm pack'
-        "*.tgz",
-
-        // Yarn Integrity file
-        ".yarn-integrity",
-
-        // dotenv environment variables file
-        ".env",
-        ".env.local",
-        ".env.development.local",
-        ".env.test.local",
-        ".env.production.local",
-
-        // parcel-bundler cache
-        ".cache",
-        ".parcel-cache",
-
-        // next.js build output
-        ".next",
-
-        // nuxt.js build output
-        ".nuxt",
-
-        // vuepress build output
-        ".vuepress/dist",
-
-        // Serverless directories
-        ".serverless",
-
-        // FuseBox cache
-        ".fusebox/",
-
-        // DynamoDB Local files
-        ".dynamodb/",
-
-        // VS Code extension files
+        "*.log",
+        "*.lock",
+        ".DS_Store",
+        "Thumbs.db",
         "*.vsix",
-
-        // Compiled files
-        "*.com",
-        "*.class",
-        "*.dll",
-        "*.exe",
-        "*.o",
-        "*.so",
-
-        // Compressed files
-        "*.7z",
-        "*.dmg",
-        "*.gz",
-        "*.iso",
-        "*.jar",
-        "*.rar",
-        "*.tar",
-        "*.zip",
-
-        // Source maps
         "*.map",
-
-        // Lock files (usually not needed for context)
-        "package-lock.json",
-        "yarn.lock",
-        "pnpm-lock.yaml",
-
-        // Minified files
-        "*.min.js",
-        "*.min.css",
       )
     } catch (error) {
       console.error("Error loading .gitignore:", error)

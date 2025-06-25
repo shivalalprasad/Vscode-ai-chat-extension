@@ -16,7 +16,10 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, onApplyTo
     const renderer = new marked.Renderer()
 
     const originalCode = renderer.code
-    renderer.code = (code: string, language: string | undefined) => {
+    renderer.code = (token: { text: string; lang?: string; escaped?: boolean }) => {
+      const code = token.text
+      const language = token.lang
+
       if (language && hljs.getLanguage(language)) {
         try {
           const highlighted = hljs.highlight(code, { language }).value

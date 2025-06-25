@@ -9,9 +9,15 @@ interface MessageBubbleProps {
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const formatContent = (content: string) => {
+    // Configure marked with highlight.js
     const renderer = new marked.Renderer()
 
-    renderer.code = (code: string, language?: string) => {
+    // Override the code renderer with the correct signature
+    const originalCode = renderer.code
+    renderer.code = (token: { text: string; lang?: string; escaped?: boolean }) => {
+      const code = token.text
+      const language = token.lang
+
       if (language && hljs.getLanguage(language)) {
         try {
           const highlighted = hljs.highlight(code, { language }).value

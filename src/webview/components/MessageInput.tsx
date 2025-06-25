@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void
@@ -16,13 +16,25 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
   const [cursorPosition, setCursorPosition] = useState(0)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  useEffect(() => {
+  // Auto-resize textarea
+  const adjustTextareaHeight = useCallback(() => {
     const textarea = textareaRef.current
-    if (!textarea) return
+    if (textarea) {
+      textarea.style.height = "auto"
+      textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px"
+    }
+  }, [])
 
-    const handleInput = () => {
-      const value = textarea.value
-      const position = textarea.selectionStart
+  useEffect(() => {
+    adjustTextareaHeight()
+  }, [message, adjustTextareaHeight])
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = e.target.value
+      const position = e.target.selectionStart
+
+      setMessage(value)
       setCursorPosition(position)
 
       const beforeCursor = value.substring(0, position)
@@ -36,49 +48,56 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
       } else {
         setShowSuggestions(false)
       }
-    }
+    },
+    [workspaceFiles],
+  )
 
-    textarea.addEventListener("input", handleInput)
-    return () => textarea.removeEventListener("input", handleInput)
-  }, [workspaceFiles])
+  const handleSuggestionClick = useCallback(
+    (filename: string) => {
+      const textarea = textareaRef.current
+      if (!textarea) return
 
-  const handleSuggestionClick = (filename: string) => {
-    const textarea = textareaRef.current
-    if (!textarea) return
+      const value = textarea.value
+      const beforeCursor = value.substring(0, cursorPosition)
+      const afterCursor = value.substring(cursorPosition)
 
-    const value = textarea.value
-    const beforeCursor = value.substring(0, cursorPosition)
-    const afterCursor = value.substring(cursorPosition)
+      const atMatch = beforeCursor.match(/@(\w*)$/)
+      if (atMatch) {
+        const newValue = beforeCursor.replace(/@(\w*)$/, `@${filename} `) + afterCursor
+        setMessage(newValue)
+        setShowSuggestions(false)
 
-    const atMatch = beforeCursor.match(/@(\w*)$/)
-    if (atMatch) {
-      const newValue = beforeCursor.replace(/@(\w*)$/, `@${filename}`) + afterCursor
-      setMessage(newValue)
-      setShowSuggestions(false)
+        setTimeout(() => {
+          textarea.focus()
+          const newPosition = beforeCursor.replace(/@(\w*)$/, `@${filename} `).length
+          textarea.setSelectionRange(newPosition, newPosition)
+        }, 0)
+      }
+    },
+    [cursorPosition],
+  )
 
-      setTimeout(() => {
-        textarea.focus()
-        const newPosition = beforeCursor.replace(/@(\w*)$/, `@${filename}`).length
-        textarea.setSelectionRange(newPosition, newPosition)
-      }, 0)
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (message.trim() && !disabled) {
-      onSendMessage(message)
-      setMessage("")
-      setShowSuggestions(false)
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
       e.preventDefault()
-      handleSubmit(e)
-    }
-  }
+      if (message.trim() && !disabled) {
+        onSendMessage(message.trim())
+        setMessage("")
+        setShowSuggestions(false)
+      }
+    },
+    [message, disabled, onSendMessage],
+  )
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault()
+        handleSubmit(e)
+      }
+    },
+    [handleSubmit],
+  )
 
   return (
     <div className="message-input-container">
@@ -93,17 +112,33 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, works
       )}
 
       <form onSubmit={handleSubmit} className="message-input-form">
-        <textarea
-          ref={textareaRef}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message... Use @filename to attach files"
-          disabled={disabled}
-          rows={3}
-        />
-        <button type="submit" disabled={disabled || !message.trim()}>
-          {disabled ? "⏳" : "📤"} Send
+        <div className="input-wrapper">
+          <textarea
+            ref={textareaRef}
+            value={message}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message... Use @filename to attach files, Shift+Enter for new line"
+            disabled={disabled}
+            rows={1}
+          />
+        </div>
+        <button type="submit" className="send-button" disabled={disabled || !message.trim()}>
+          {disabled ? (
+            <>
+              <div className="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              Sending...
+            </>
+          ) : (
+            <>
+              <span>🚀</span>
+              Send
+            </>
+          )}
         </button>
       </form>
     </div>

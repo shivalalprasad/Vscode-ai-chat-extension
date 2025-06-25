@@ -60,11 +60,12 @@ class AIChatPanel {
 
     const panel = vscode.window.createWebviewPanel(
       AIChatPanel.viewType,
-      "AI Chat Assistant",
+      "🤖 AI Chat Assistant",
       column || vscode.ViewColumn.One,
       {
         enableScripts: true,
         localResourceRoots: [vscode.Uri.file(path.join(extensionUri.fsPath, "out", "webview"))],
+        retainContextWhenHidden: true,
       },
     )
 
@@ -82,19 +83,27 @@ class AIChatPanel {
 
     this._panel.webview.onDidReceiveMessage(
       async (message) => {
-        switch (message.type) {
-          case "sendMessage":
-            await this._handleSendMessage(message.data)
-            break
-          case "getCurrentFile":
-            await this._handleGetCurrentFile()
-            break
-          case "getFileContent":
-            await this._handleGetFileContent(message.data.filename)
-            break
-          case "getWorkspaceFiles":
-            await this._handleGetWorkspaceFiles()
-            break
+        try {
+          switch (message.type) {
+            case "sendMessage":
+              await this._handleSendMessage(message.data)
+              break
+            case "getCurrentFile":
+              await this._handleGetCurrentFile()
+              break
+            case "getFileContent":
+              await this._handleGetFileContent(message.data.filename)
+              break
+            case "getWorkspaceFiles":
+              await this._handleGetWorkspaceFiles()
+              break
+          }
+        } catch (error) {
+          console.error("Error handling message:", error)
+          this._panel.webview.postMessage({
+            type: "error",
+            data: { message: `Extension error: ${error}` },
+          })
         }
       },
       null,
@@ -107,15 +116,16 @@ class AIChatPanel {
       let fullMessage = data.message
       const fileContents: string[] = []
 
+      // Process attached files
       for (const filename of data.attachedFiles) {
         const content = await this._fileService.getFileContent(filename)
         if (content) {
-          fileContents.push(`File: ${filename}\n\`\`\`\n${content}\n\`\`\``)
+          fileContents.push(`**File: ${filename}**\n\`\`\`\n${content}\n\`\`\``)
         }
       }
 
       if (fileContents.length > 0) {
-        fullMessage += "\n\nAttached files:\n" + fileContents.join("\n\n")
+        fullMessage += "\n\n**Attached files:**\n" + fileContents.join("\n\n")
       }
 
       const response = await this._geminiService.sendMessage(fullMessage)
@@ -125,42 +135,72 @@ class AIChatPanel {
         data: { message: response },
       })
     } catch (error) {
+      console.error("Error sending message:", error)
       this._panel.webview.postMessage({
         type: "error",
-        data: { message: `Error: ${error}` },
+        data: { message: `Failed to get AI response: ${error}` },
       })
     }
   }
 
   private async _handleGetCurrentFile() {
-    const activeEditor = vscode.window.activeTextEditor
-    if (activeEditor) {
-      const document = activeEditor.document
-      const selection = activeEditor.selection
-      const filename = path.basename(document.fileName)
-      const content = !selection.isEmpty ? document.getText(selection) : document.getText()
+    try {
+      const activeEditor = vscode.window.activeTextEditor
+      if (activeEditor) {
+        const document = activeEditor.document
+        const selection = activeEditor.selection
+        const filename = path.basename(document.fileName)
+        const content = !selection.isEmpty ? document.getText(selection) : document.getText()
 
+        this._panel.webview.postMessage({
+          type: "currentFileContent",
+          data: { filename, content, isSelection: !selection.isEmpty },
+        })
+      } else {
+        this._panel.webview.postMessage({
+          type: "error",
+          data: { message: "No active file found. Please open a file in the editor." },
+        })
+      }
+    } catch (error) {
+      console.error("Error getting current file:", error)
       this._panel.webview.postMessage({
-        type: "currentFileContent",
-        data: { filename, content, isSelection: !selection.isEmpty },
+        type: "error",
+        data: { message: `Failed to get current file: ${error}` },
       })
     }
   }
 
   private async _handleGetFileContent(filename: string) {
-    const content = await this._fileService.getFileContent(filename)
-    this._panel.webview.postMessage({
-      type: "fileContent",
-      data: { filename, content },
-    })
+    try {
+      const content = await this._fileService.getFileContent(filename)
+      this._panel.webview.postMessage({
+        type: "fileContent",
+        data: { filename, content },
+      })
+    } catch (error) {
+      console.error("Error getting file content:", error)
+      this._panel.webview.postMessage({
+        type: "error",
+        data: { message: `Failed to read file ${filename}: ${error}` },
+      })
+    }
   }
 
   private async _handleGetWorkspaceFiles() {
-    const files = await this._fileService.getWorkspaceFiles()
-    this._panel.webview.postMessage({
-      type: "workspaceFiles",
-      data: { files },
-    })
+    try {
+      const files = await this._fileService.getWorkspaceFiles()
+      this._panel.webview.postMessage({
+        type: "workspaceFiles",
+        data: { files },
+      })
+    } catch (error) {
+      console.error("Error getting workspace files:", error)
+      this._panel.webview.postMessage({
+        type: "error",
+        data: { message: `Failed to get workspace files: ${error}` },
+      })
+    }
   }
 
   public dispose() {
@@ -189,6 +229,9 @@ class AIChatPanel {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>AI Chat Assistant</title>
+                <style>
+                  body { margin: 0; padding: 0; overflow: hidden; }
+                </style>
             </head>
             <body>
                 <div id="root"></div>

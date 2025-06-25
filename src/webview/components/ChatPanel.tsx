@@ -15,7 +15,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading }) => 
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+  }, [messages, isLoading])
 
   return (
     <div className="chat-panel">
@@ -23,7 +23,26 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading }) => 
         {messages.length === 0 && (
           <div className="welcome-message">
             <h2>Welcome to AI Chat Assistant! 👋</h2>
-            <p>Start a conversation with your AI assistant.</p>
+            <p>Your intelligent coding companion powered by Google Gemini</p>
+
+            <div className="welcome-features">
+              <div className="feature-card">
+                <h3>📄 File Context</h3>
+                <p>Use @filename or "Use Current File" to include code context in your conversations</p>
+              </div>
+              <div className="feature-card">
+                <h3>🚀 Quick Actions</h3>
+                <p>Explain code, find bugs, generate tests, and optimize performance with one click</p>
+              </div>
+              <div className="feature-card">
+                <h3>💡 Smart Suggestions</h3>
+                <p>Get intelligent code suggestions, best practices, and architectural advice</p>
+              </div>
+              <div className="feature-card">
+                <h3>🔧 Code Generation</h3>
+                <p>Generate boilerplate code, documentation, and comprehensive test suites</p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -38,7 +57,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, isLoading }) => 
               <span></span>
               <span></span>
             </div>
-            <span>AI is thinking...</span>
+            <span>🤖 AI is thinking...</span>
           </div>
         )}
 

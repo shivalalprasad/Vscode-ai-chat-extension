@@ -4,8 +4,11 @@ import { config } from "dotenv"
 import { OpenAIService } from "./utils/openai-service"
 import { FileService } from "./utils/file-service"
 
-// Load environment variables
-config()
+// Load environment variables from the workspace root
+const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
+if (workspaceRoot) {
+  config({ path: path.join(workspaceRoot, ".env") })
+}
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("AI Chat Assistant extension is now active!")

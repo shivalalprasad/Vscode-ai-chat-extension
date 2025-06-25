@@ -23,7 +23,28 @@
         "command": "aiChatAssistant.start",
         "title": "Start AI Chat Assistant"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "AI Chat Assistant",
+      "properties": {
+        "aiChatAssistant.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your OpenAI API key",
+          "scope": "resource"
+        },
+        "aiChatAssistant.model": {
+          "type": "string",
+          "default": "gpt-4",
+          "description": "OpenAI model to use",
+          "enum": [
+            "gpt-4",
+            "gpt-3.5-turbo"
+          ],
+          "scope": "resource"
+        }
+      }
+    }
   },
   "activationEvents": [
     "onCommand:aiChatAssistant.start"

@@ -1,21 +1,26 @@
 import axios from "axios"
+import * as vscode from "vscode"
 
 export class OpenAIService {
   private apiKey: string
   private model: string
 
   constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY || ""
-    this.model = process.env.OPENAI_MODEL || "gpt-4"
+    // Try to get from environment variables first, then from VS Code settings
+    this.apiKey =
+      process.env.OPENAI_API_KEY || vscode.workspace.getConfiguration("aiChatAssistant").get("openaiApiKey", "")
+    this.model = process.env.OPENAI_MODEL || vscode.workspace.getConfiguration("aiChatAssistant").get("model", "gpt-4")
 
     if (!this.apiKey) {
-      console.warn("OPENAI_API_KEY environment variable not set")
+      console.warn("OPENAI_API_KEY environment variable not set and no API key found in settings")
     }
   }
 
   async sendMessage(message: string): Promise<string> {
     if (!this.apiKey) {
-      throw new Error("OpenAI API key not configured")
+      throw new Error(
+        "OpenAI API key not configured. Please set OPENAI_API_KEY environment variable or configure it in VS Code settings.",
+      )
     }
 
     try {

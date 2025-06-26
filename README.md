@@ -23,15 +23,15 @@ A Visual Studio Code extension that provides Glitchy 🤌, your mischievous AI c
 ### Development Setup
 
 1. Clone this repository:
-   \`\`\`bash
+   ```bash
    git clone <repository-url>
    cd ai-chat-assistant
-   \`\`\`
+   ```
 
 2. Install dependencies:
-   \`\`\`bash
+   ```bash
    npm install
-   \`\`\`
+   ```
 
 3. Get your Gemini API key:
    - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -39,19 +39,19 @@ A Visual Studio Code extension that provides Glitchy 🤌, your mischievous AI c
    - Copy the API key
 
 4. Configure your Gemini API key:
-   \`\`\`bash
+   ```bash
    # Copy the example environment file
    cp .env.example .env
-   
+
    # Edit .env and add your Gemini API key
    # GEMINI_API_KEY=your_actual_api_key_here
    # GEMINI_MODEL=gemini-1.5-flash
-   \`\`\`
+   ```
 
 5. Build the extension:
-   \`\`\`bash
+   ```bash
    npm run compile
-   \`\`\`
+   ```
 
 6. Open the project in VS Code and press `F5` to run the extension in a new Extension Development Host window.
 
@@ -64,10 +64,10 @@ The extension uses environment variables for configuration:
 
 Create a `.env` file in the root directory:
 
-\`\`\`env
+```env
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=gemini-1.5-flash
-\`\`\`
+```
 
 **Important**: Never commit your `.env` file to version control. The `.env` file is already included in `.gitignore`.
 
@@ -122,7 +122,7 @@ GEMINI_MODEL=gemini-1.5-flash
 
 ### Building
 
-\`\`\`bash
+```bash
 # Compile TypeScript
 npm run compile
 
@@ -131,7 +131,7 @@ npm run webpack
 
 # Build for production
 npm run vscode:prepublish
-\`\`\`
+```
 
 ### Debugging
 
@@ -141,7 +141,7 @@ npm run vscode:prepublish
 
 ### Project Structure
 
-\`\`\`
+```
 src/
 ├── extension.ts              # Main extension entry point
 ├── utils/
@@ -157,7 +157,7 @@ src/
     ├── types.ts             # TypeScript type definitions
     ├── index.tsx            # React entry point
     └── styles.css           # CSS styles
-\`\`\`
+```
 
 ## Contributing
 
